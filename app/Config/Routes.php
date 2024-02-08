@@ -5,7 +5,7 @@ namespace Config;
 use CodeIgniter\Router\RouteCollection;
 
 // Create a new instance of our RouteCollection class.
-$routes = Services::routes();
+// $routes = Services::routes();
 
 // Load the system's routing file first, so that the app and ENVIRONMENT
 // can override as needed.
@@ -43,6 +43,14 @@ $routes->get('/register', 'AuthController::registerView');
 $routes->post('/register/submit', 'AuthController::registerAuth');
 $routes->get('/logout', 'AuthController::logout');
 
+// API
+$routes->group("", ['filter' => 'cors'], function ($routes) {
+  $routes->post('/api/login', 'AuthController::loginApi');
+  $routes->post('/api/register', 'AuthController::registerApi');
+  $routes->get('/api/books', 'BookController::listBooksApi');
+});
+
+
 $routes->group('', ['filter' => 'authGuard'], function ($routes) {
   // BOOKS
   $routes->get('/books', 'BookController::booksView');
@@ -53,3 +61,7 @@ $routes->group('', ['filter' => 'authGuard'], function ($routes) {
   $routes->get('/payment', 'PaymentController::index');
   $routes->get('/report', 'ReportController::index');
 });
+
+if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
+  require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
+}

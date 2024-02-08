@@ -4,9 +4,12 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\BookModel;
+use CodeIgniter\API\ResponseTrait;
 
 class BookController extends BaseController
 {
+    use ResponseTrait;
+
     protected $bookModel;
     public function __construct()
     {
@@ -20,6 +23,15 @@ class BookController extends BaseController
             "data" => $books,
         ];
         return view('pages/books/index', $data);
+    }
+
+    public function listBooksApi()
+    {
+        $books = $this->bookModel->findAll();
+        $response = [
+            "data" => $books,
+        ];
+        return $this->respond($response, 200);
     }
 
     public function create()

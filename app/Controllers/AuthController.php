@@ -4,10 +4,19 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\UserModel;
+use CodeIgniter\API\ResponseTrait;
 use Config\Services;
+use Firebase\JWT\JWT;
 
 class AuthController extends BaseController
 {
+    use ResponseTrait;
+    protected $userModel;
+
+    public function __construct()
+    {
+        $this->userModel = new UserModel();
+    }
     public function loginView()
     {
         return view('pages/auth/login');
@@ -20,7 +29,9 @@ class AuthController extends BaseController
         $email = $this->request->getVar('email');
         $password = $this->request->getVar('password');
 
-        $data = $userModel->where('email', $email)->first();
+        $data = $userModel
+            ->where('role !=', 'user')
+            ->where('email', $email)->first();
         // dd($data);
 
         if ($data) {
@@ -50,6 +61,46 @@ class AuthController extends BaseController
         }
     }
 
+    public function loginApi()
+    {
+        $email = $this->request->getVar('email');
+        $password = $this->request->getVar('password');
+
+        $user = $this->userModel->where('email', $email)->first();
+
+        if (is_null($user)) {
+            return $this->respond(['error' => 'Invalid username or password.'], 401);
+        }
+
+        $pwd_verify = password_verify($password, $user['password']);
+
+        if (!$pwd_verify) {
+            return $this->respond(['error' => 'Invalid username or password.'], 401);
+        }
+
+        $key = getenv('JWT_SECRET');
+        $iat = time(); // current timestamp value
+        $exp = $iat + 3600;
+
+        $payload = array(
+            "iss" => "Issuer of the JWT",
+            "aud" => "Audience that the JWT",
+            "sub" => "Subject of the JWT",
+            "iat" => $iat, //Time the JWT issued at
+            "exp" => $exp, // Expiration time of token
+            "email" => $user['email'],
+        );
+
+        $token = JWT::encode($payload, $key, 'HS256');
+
+        $response = [
+            'message' => 'Login Succesfully!',
+            'token' => $token
+        ];
+
+        return $this->respond($response, 200);
+    }
+
     public function registerView()
     {
         return view('pages/auth/register');
@@ -58,8 +109,6 @@ class AuthController extends BaseController
     public function registerAuth()
     {
         helper(['form']);
-        $userModel = new UserModel();
-
         $rules = [
             'user_name' => 'required|min_length[2]|max_length[50]',
             'email' => 'required|min_length[4]|max_length[100]|valid_email|is_unique[users.email]',
@@ -76,9 +125,40 @@ class AuthController extends BaseController
                 'role' => 'petugas',
             ];
 
-            $userModel->save($data);
+            $this->userModel->save($data);
             session()->setFlashdata('success', 'Registration Successfully.');
             return redirect()->to(base_url("/login"));
+        } else {
+            $validation = Services::validation();
+            return redirect()->to(base_url('/register'))->withInput()->with('validation', $validation);
+        }
+    }
+
+    public function registerApi()
+    {
+        helper(['form']);
+        $rules = [
+            'user_name' => 'required|min_length[2]|max_length[50]',
+            'email' => 'required|min_length[4]|max_length[100]|valid_email|is_unique[users.email]',
+            'password' => 'required|min_length[3]|max_length[50]',
+            'address' => 'required',
+        ];
+
+        if ($this->validate($rules)) {
+            $data = [
+                'user_name' => $this->request->getVar('user_name'),
+                'email' => $this->request->getVar('email'),
+                'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
+                'address' => $this->request->getVar('address'),
+                'role' => 'user',
+            ];
+
+            $this->userModel->save($data);
+            $response = [
+                'message' => 'Registration Succesfully!',
+            ];
+    
+            return $this->respond($response, 200);
         } else {
             $validation = Services::validation();
             return redirect()->to(base_url('/register'))->withInput()->with('validation', $validation);
