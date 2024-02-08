@@ -1,20 +1,12 @@
-<ul class="navbar-nav bg-gradient-primary-admin sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-primary-admin sidebar sidebar-dark accordion py-4" id="accordionSidebar">
 
   <!-- Sidebar - Brand -->
-  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-    <div class="sidebar-brand-icon rotate-n-15">
-    </div>
-    <div class="sidebar-brand-text mx-3">siperpus</div>
+  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+    <h2 class="text-white">siperpus</h2>
   </a>
 
   <!-- Divider -->
   <hr class="sidebar-divider my-0">
-
-  <!-- Nav Item - Dashboard -->
-  <li class="nav-item">
-    <a class="nav-link" href="dashboard">
-      <span>Dashboard</span></a>
-  </li>
 
   <!-- Divider -->
   <hr class="sidebar-divider">
@@ -36,7 +28,7 @@
   </li>
 
   <li class="nav-item">
-    <a class="nav-link" href="report">
+    <a class="nav-link" href="<?php echo base_url(); ?>/logout">
       <span>Logout</span></a>
   </li>
 
