@@ -66,7 +66,7 @@ $routes->group('', ['filter' => 'authGuard'], function ($routes) {
   $routes->post('/books/delete/(:num)', 'BookController::delete/$1');
 
   // PAYMENTS
-  $routes->get('/payment', 'PaymentController::paymentView');
+  $routes->get('/payment', 'BorrowingController::paymentView');
 
   // REPORTS
   $routes->get('/report', 'ReportController::reportView');

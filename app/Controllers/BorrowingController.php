@@ -86,6 +86,35 @@ class BorrowingController extends BaseController
         return view('pages/return/index', $data);
     }
 
+    public function paymentView()
+    {
+        $return = $this->borrowModel
+            ->where('status', 'done')
+            ->join('users', 'users.user_id = borrows.user_id')
+            ->join('books', 'books.book_id = borrows.book_id')
+            ->findAll();
+
+        $response = [];
+        foreach ($return as $r) {
+            $dueDate = new DateTime($r['due_date']);
+            $currentDate = new DateTime();
+            $daysDifference = $dueDate->diff($currentDate)->days;
+
+            if ($dueDate < $currentDate) {
+                $totalFine = 0;
+            } else {
+                $totalFine = $daysDifference * 1000;
+            }
+
+            $response[] = array_merge($r, ['total_fine' => $totalFine]);
+        }
+
+        $data = [
+            "data" => $response,
+        ];
+        return view('pages/payment/index', $data);
+    }
+
     public function listBorrowingApi()
     {
         $decoded = $this->decodedToken();

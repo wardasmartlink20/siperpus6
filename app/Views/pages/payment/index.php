@@ -4,7 +4,7 @@
 <div class="container-fluid">
 
   <!-- Page Heading -->
-  <h1 class="title h3 text-grey-900">PAYMENT</h1>
+  <h1 class="title h3 text-grey-900">Payment</h1>
   <div class="card-body py-3">
     <!-- begin::Table container -->
     <div class="table-responsive">
@@ -14,10 +14,9 @@
         <thead style="background-color: #A9AF7E; color: black">
           <tr class="fw-bold">
             <th>No</th>
-            <th>Name</th>
-            <th>Book Title</th>
+            <th>Username</th>
+            <th>Title</th>
             <th>Date</th>
-            <th>Total</th>
             <th>Proof of Payment</th>
           </tr>
         </thead>
@@ -28,9 +27,8 @@
               <td><?= $i++ ?></td>
               <td><?= $d['user_name'] ?></td>
               <td><?= $d['title'] ?></td>
-              <td><?= $d['date'] ?></td>
-              <td><?= $d['total'] ?></td>
-              <td><?= $d['proof_of_payment'] ?></td>
+              <td><?= date_format(date_create($d['updated_at']), 'd M Y') ?></td>
+              <td><?= 'Rp ' . number_format($d['total_fine'], 0, ',', '.') ?></td>
             </tr>
           <?php endforeach; ?>
         </tbody>
