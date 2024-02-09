@@ -31,10 +31,15 @@ class Reviews extends Migration
                 'constraint' => 10,
                 'unsigned' => true,
             ],
-            'comment' => [
+            'review' => [
                 'type' => 'TEXT',
                 'null' => true,
             ],
+            'rating' => [
+                'type' => 'INT',
+                'constraint' => 10,
+                'null' => true
+            ]
         ]);
 
         $this->forge->addKey('review_id', true);

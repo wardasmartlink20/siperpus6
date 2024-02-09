@@ -55,11 +55,11 @@ $routes->group('', ['filter' => 'authGuard'], function ($routes) {
   // BOOKS
   $routes->get('/books', 'BookController::booksView');
   $routes->post('/books/create', 'BookController::create');
-  $routes->post('/books/update/(:num)', 'BookController::update/$1');
+  $routes->put('/books/update/(:num)', 'BookController::update/$1');
   $routes->post('/books/delete/(:num)', 'BookController::delete/$1');
 
-  $routes->get('/payment', 'PaymentController::index');
-  $routes->get('/report', 'ReportController::index');
+  $routes->get('/payment', 'PaymentController::paymentView');
+  $routes->get('/report', 'ReportController::reportView');
 });
 
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {

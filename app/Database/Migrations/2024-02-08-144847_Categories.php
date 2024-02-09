@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Reports extends Migration
+class Category extends Migration
 {
     protected $forge;
     public function __construct()
@@ -15,26 +15,25 @@ class Reports extends Migration
     public function up()
     {
         $this->forge->addField([
-            'report_id' => [
+            'category_id' => [
                 'type' => 'INT',
                 'constraint' => 10,
                 'unsigned' => true,
                 'auto_increment' => true,
             ],
-            'payment_id' => [
-                'type' => 'INT',
-                'constraint' => 10,
-                'unsigned' => true,
+            'category_name' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'null' => true,
             ],
         ]);
 
-        $this->forge->addKey('report_id', true);
-        $this->forge->addForeignKey('payment_id', 'payments', 'payment_id');
-        $this->forge->createTable('reports');
+        $this->forge->addKey('category_id', true);
+        $this->forge->createTable('categories');
     }
 
     public function down()
     {
-        $this->forge->dropTable('reports');
+        $this->forge->dropTable('categories');
     }
 }

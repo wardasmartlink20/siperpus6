@@ -4,32 +4,37 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\BookModel;
+use App\Models\CategoryModel;
 use CodeIgniter\API\ResponseTrait;
 
 class BookController extends BaseController
 {
     use ResponseTrait;
 
-    protected $bookModel;
+    protected $bookModel, $categoryModel, $books;
     public function __construct()
     {
         $this->bookModel = new BookModel();
+        $this->categoryModel = new CategoryModel();
+        $this->books = $this->bookModel
+            ->join('categories', 'categories.category_id = books.category_id')
+            ->findAll();
     }
 
     public function booksView()
     {
-        $books = $this->bookModel->findAll();
+        $categories = $this->categoryModel->findAll();
         $data = [
-            "data" => $books,
+            "data" => $this->books,
+            "categories" => $categories,
         ];
         return view('pages/books/index', $data);
     }
 
     public function listBooksApi()
     {
-        $books = $this->bookModel->findAll();
         $response = [
-            "data" => $books,
+            "data" => $this->books,
         ];
         return $this->respond($response, 200);
     }
@@ -49,6 +54,7 @@ class BookController extends BaseController
             'year_publication' => $this->request->getVar('year_publication'),
             'synopsis' => $this->request->getVar('synopsis'),
             'thumbnail' => '/assets/books/' . $fileName,
+            'category_id' => $this->request->getVar('category_id'),
         ];
 
         $this->bookModel->save($data);

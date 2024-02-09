@@ -26,10 +26,4 @@
     <a class="nav-link" href="report">
       <span>Generate Laporan</span></a>
   </li>
-
-  <li class="nav-item">
-    <a class="nav-link" href="<?php echo base_url(); ?>/logout">
-      <span>Logout</span></a>
-  </li>
-
 </ul>

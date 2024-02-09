@@ -35,13 +35,14 @@
           <!-- begin::Table head -->
           <thead style="background-color: #A9AF7E; color: black">
             <tr class="fw-bold">
-              <th>#</th>
+              <th>No</th>
+              <th>Cover</th>
+              <th>Category</th>
               <th>Title</th>
               <th>Writer</th>
               <th>Publisher</th>
-              <th>Year Publication</th>
+              <th style="width: 150px;">Year Publication</th>
               <th style="width: 400px;">Synopsis</th>
-              <th>Thumbnail</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -50,12 +51,13 @@
             <?php foreach ($data as $d) : ?>
               <tr>
                 <td><?= $i++ ?></td>
+                <td><img src="<?= base_url() . $d['thumbnail'] ?>" width="100" style="object-fit: contain;" /></td>
+                <td><?= $d["category_name"] ?></td>
                 <td><?= $d["title"] ?></td>
                 <td><?= $d["writer"] ?></td>
                 <td><?= $d["publisher"] ?></td>
                 <td><?= $d["year_publication"] ?></td>
                 <td><?= $d["synopsis"] ?></td>
-                <td><img src="<?= base_url() . $d['thumbnail'] ?>" width="100" style="object-fit: contain;" /></td>
                 <td>
                   <div>
                     <i class="fas fa-edit" title="Edit" data-bs-toggle="modal" data-bs-target="#editModal<?= $d['book_id'] ?>"></i>
@@ -83,6 +85,17 @@
             <div class="px-4">
               <form enctype="multipart/form-data" action="<?php echo base_url(); ?>/books/create" method="post">
                 <div class="form-group">
+                  <label for="category_id" class="form-label">Category</label>
+                  <select name="category_id" class="form-control form-select" id="basicSelect">
+                    <option value="">--please select--</option>
+                    <?php foreach ($categories as $c) : ?>
+                      <option value="<?= $c['category_id'] ?>">
+                        <?= $c['category_name'] ?>
+                      </option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+                <div class="form-group">
                   <label for="title" class="form-label">Title</label>
                   <input required name="title" type="text" class="form-control form-control-user" id="title" aria-describedby="title">
                 </div>
@@ -100,7 +113,7 @@
                 </div>
                 <div class="form-group">
                   <label for="synopsis" class="form-label">Synopsis</label>
-                  <input required name="synopsis" type="text" class="form-control form-control-user" id="synopsis" aria-describedby="synopsis">
+                  <textarea required name="synopsis" class="form-control" id="synopsis" rows="3" aria-describedby="synopsis"></textarea>
                 </div>
                 <div class="form-group">
                   <label for="thumbnail" class="form-label">Add Photo</label>
@@ -130,7 +143,7 @@
             </div>
             <div class="modal-body">
               <div class="px-4">
-                <form enctype="multipart/form-data" action="<?php echo base_url(); ?>/books/update/<?= $d['book_id'] ?>" method="post">
+                <form enctype="multipart/form-data" action="<?php echo base_url(); ?>/books/update/<?= $d['book_id'] ?>" method="put">
                   <div class="form-group">
                     <label for="title" class="form-label">Title</label>
                     <input required name="title" type="text" class="form-control form-control-user" id="title" aria-describedby="title" value="<?= $d['title'] ?>">

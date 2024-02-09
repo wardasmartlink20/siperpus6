@@ -3,12 +3,24 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use CodeIgniter\HTTP\ResponseInterface;
+use App\Models\ReportModel;
 
 class ReportController extends BaseController
 {
-    public function index()
+    protected $reportModel, $reports;
+    public function __construct()
     {
-        return view("pages/report/index");
+        $this->reportModel = new ReportModel();
+        $this->reports = $this->reportModel
+            ->join('payments', 'payments.payment_id = reports.payment_id')
+            ->findAll();
+    }
+
+    public function reportView()
+    {
+        $data = [
+            "data" => $this->reports
+        ];
+        return view("pages/report/index", $data);
     }
 }
