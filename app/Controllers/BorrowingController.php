@@ -4,32 +4,131 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\BorrowModel;
+use CodeIgniter\API\ResponseTrait;
+use DateTime;
 
 class BorrowingController extends BaseController
 {
-    protected $borrowModel, $borrowing;
+    use ResponseTrait;
+
+    protected $borrowModel;
     public function __construct()
     {
         $this->borrowModel = new BorrowModel();
-        $this->borrowing = $this->borrowModel
-            ->join('users', 'users.user_id = borrows.user_id')
-            ->join('books', 'books.book_id = borrows.book_id')
-            ->findAll();
     }
 
     public function borrowingView()
     {
+        $borrowing = $this->borrowModel
+            ->where('status', 'process')
+            ->orWhere('status', 'borrowed')
+            ->join('users', 'users.user_id = borrows.user_id')
+            ->join('books', 'books.book_id = borrows.book_id')
+            ->findAll();
+
         $data = [
-            "data" => $this->borrowing,
+            "data" => $borrowing,
         ];
         return view('pages/borrowing/index', $data);
     }
 
+    public function updateBorrowingStatus($id, $status)
+    {
+        $current = $this->borrowModel
+            ->where(['borrow_id' => $id])
+            ->first();
+
+        $data = [
+            "borrow_id" => $id,
+            "user_id" => $current['user_id'],
+            "book_id" => $current['book_id'],
+            "loan_date" => $current['loan_date'],
+            "due_date" => $current['due_date'],
+            "status" => $status
+        ];
+        $this->borrowModel->replace($data);
+        session()->setFlashdata('success', 'Update Status Successfully.');
+        return redirect()->to(base_url("/borrowing"));
+    }
+
     public function returnView()
     {
+        $return = $this->borrowModel
+            ->where('status', 'borrowed')
+            ->orWhere('status', 'done')
+            ->join('users', 'users.user_id = borrows.user_id')
+            ->join('books', 'books.book_id = borrows.book_id')
+            ->findAll();
+
         $data = [
-            "data" => $this->borrowing,
+            "data" => $return,
         ];
         return view('pages/return/index', $data);
+    }
+
+    public function listBorrowingApi()
+    {
+        $decoded = $this->decodedToken();
+
+        $data = $this->borrowModel
+            ->join('books', 'books.book_id = borrows.book_id')
+            ->where(['user_id' => $decoded->user_id])
+            ->findAll();
+
+        $response = [
+            'status' => 200,
+            'data' => $data,
+        ];
+
+        return $this->respond($response, 200);
+    }
+
+    public function borrowingApi()
+    {
+        $decoded = $this->decodedToken();
+        $loanDate = date('Y/m/d');
+        $dueDate = date('Y/m/d', strtotime($loanDate . ' +3 days'));
+        $data = [
+            'user_id' => $decoded->user_id,
+            'book_id' => $this->request->getVar('book_id'),
+            'loan_date' => $loanDate,
+            'due_date' => $dueDate,
+            'status' => 'process',
+        ];
+
+        $this->borrowModel->save($data);
+        $response = [
+            "status" => 200,
+            'message' => 'Borrowing Book Succesfully!',
+        ];
+
+        return $this->respond($response, 200);
+    }
+
+    public function getTotalPriceApi()
+    {
+        $decoded = $this->decodedToken();
+        $data = $this->borrowModel
+            ->where([
+                'borrow_id' => $this->request->getVar('borrow_id'),
+                'user_id' => $decoded->user_id,
+            ])
+            ->first();
+
+        $dueDate = new DateTime($data['due_date']);
+        $currentDate = new DateTime();
+        $daysDifference = $dueDate->diff($currentDate)->days;
+
+        // Multiply the difference by 1000
+        $result = $daysDifference * 1000;
+
+        $response = [
+            'status' => 200,
+            'data' => [
+                'total_fine' => $result
+            ],
+        ];
+
+        return $this->respond($response, 200);
     }
 }

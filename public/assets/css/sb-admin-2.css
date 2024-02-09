@@ -631,7 +631,6 @@ h2,
 h3,
 .h3 {
   font-size: 1.75rem;
-  margin-top: 50px;
   margin-left: 20px;
 }
 
@@ -5560,8 +5559,8 @@ a.close.disabled {
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
-  opacity: 0;
   border-radius: 0.25rem;
+  color: #000;
 }
 
 .toast:not(:last-child) {
@@ -7815,31 +7814,6 @@ td:last-child > div > i {
 
 td:last-child button:first-child {
   margin-bottom: 5px;
-  background-color: #206cfe;
-  color: white;
-  border: none; /* Remove the border */
-  padding: 5px 10px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  border-radius: 5px;
-}
-td:last-child button:last-child {
-  margin-bottom: 5px;
-  background-color: #ff0000;
-  color: white;
-  border: none; /* Remove the border */
-  padding: 5px 10px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  border-radius: 5px;
-}
-
-td:last-child button:first-child {
-  margin-bottom: 5px;
 }
 
 .title {
@@ -9896,16 +9870,17 @@ a:focus {
 
 #wrapper {
   display: flex;
+  overflow: hidden;
 }
 
 #wrapper #content-wrapper {
-  /* background-color: #f8f9fc; */
   width: 100%;
-  /* overflow-x: hidden; */
+  height: 100vh;
 }
 
 #wrapper #content-wrapper #content {
-  flex: 1 0 auto;
+  /* flex: 1 0 auto; */
+  overflow-y: scroll;
 }
 
 .container-fluid,

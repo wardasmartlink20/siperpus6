@@ -5,17 +5,19 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\BookModel;
 use App\Models\CategoryModel;
+use App\Models\ReviewModel;
 use CodeIgniter\API\ResponseTrait;
 
 class BookController extends BaseController
 {
     use ResponseTrait;
 
-    protected $bookModel, $categoryModel, $books;
+    protected $bookModel, $categoryModel, $reviewModel, $books;
     public function __construct()
     {
         $this->bookModel = new BookModel();
         $this->categoryModel = new CategoryModel();
+        $this->reviewModel = new ReviewModel();
         $this->books = $this->bookModel
             ->join('categories', 'categories.category_id = books.category_id')
             ->findAll();
@@ -33,9 +35,106 @@ class BookController extends BaseController
 
     public function listBooksApi()
     {
+        // Get the category ID from the request
+        $categoryId = $this->request->getVar('category');
+
+        // Initialize an empty array for books
+        $books = [];
+
+        // Check if a category ID is provided
+        if ($categoryId) {
+            // If a category ID is provided, fetch books with a matching category
+            $books = $this->bookModel
+                ->join('categories', 'categories.category_id = books.category_id')
+                ->where(['books.category_id' => $categoryId])
+                ->findAll();
+        } else {
+            // If no category ID is provided, fetch all books
+            $books = $this->bookModel->findAll();
+        }
+
+        // Initialize an empty array for the final response
+        $responseData = [];
+
+        // Loop through each book
+        foreach ($books as $book) {
+            // Fetch reviews for the current book
+            $reviews = $this->reviewModel
+                ->join('users', 'users.user_id = reviews.user_id')
+                ->where(['book_id' => $book['book_id']])
+                ->findAll();
+
+            $totalRating = 0;
+            $responseReview = [];
+            foreach ($reviews as $review) {
+                $totalRating += (int)$review['rating'];
+                $responseReview[] = [
+                    'review_id' => $review['review_id'],
+                    'user_name' => $review['user_name'],
+                    'review' => $review['review'],
+                    'rating' => (int)$review['rating'],
+                ];
+            }
+
+            $averageRating = count($reviews) > 0 ? $totalRating / count($reviews) : 0;
+
+            $responseData[] = array_merge($book, [
+                'rating' => round($averageRating, 1),
+                'reviews' => $responseReview
+            ]);
+        }
+
+        // Prepare the final response
         $response = [
-            "data" => $this->books,
+            "status" => 200,
+            "data" => $responseData,
         ];
+
+        // Return the response
+        return $this->respond($response, 200);
+    }
+
+    public function detailBookApi($id)
+    {
+        $book = $this->bookModel
+            ->join('categories', 'categories.category_id = books.category_id')
+            ->where(['books.book_id' => $id])
+            ->first();
+
+        // Initialize an empty array for the final response
+        $responseData = [];
+
+        $reviews = $this->reviewModel
+            ->join('users', 'users.user_id = reviews.user_id')
+            ->where(['book_id' => $id])
+            ->findAll();
+
+        $totalRating = 0;
+        $responseReview = [];
+        foreach ($reviews as $review) {
+            $totalRating += (int)$review['rating'];
+            $responseReview[] = [
+                'review_id' => $review['review_id'],
+                'user_name' => $review['user_name'],
+                'review' => $review['review'],
+                'rating' => (int)$review['rating'],
+            ];
+        }
+        // Append book information and cleaned reviews directly to the response array
+        $averageRating = count($reviews) > 0 ? $totalRating / count($reviews) : 0;
+
+        $responseData = array_merge($book, [
+            'rating' => round($averageRating, 1),
+            'reviews' => $responseReview
+        ]);
+
+        // Prepare the final response
+        $response = [
+            "status" => 200,
+            "data" => $responseData,
+        ];
+
+        // Return the response
         return $this->respond($response, 200);
     }
 

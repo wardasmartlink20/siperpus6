@@ -7,12 +7,12 @@ use CodeIgniter\Model;
 class BorrowModel extends Model
 {
     protected $table            = 'borrows';
-    protected $primaryKey       = 'id';
+    protected $primaryKey       = 'borrow_id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = ['user_id', 'book_id', 'loan_date', 'due_date', 'status'];
 
     protected bool $allowEmptyInserts = false;
 

@@ -11,5 +11,6 @@ class DataSeeder extends Seeder
         $this->call('UserSeeder');
         $this->call('CategorySeeder');
         $this->call('BooksSeeder');
+        $this->call('ReviewsSeeder');
     }
 }

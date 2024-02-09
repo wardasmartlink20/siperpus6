@@ -29,9 +29,24 @@
               <td><?= $i++ ?></td>
               <td><?= $d['user_name'] ?></td>
               <td><?= $d['title'] ?></td>
-              <td><?= $d['date'] ?></td>
-              <td><?= $d['total'] ?></td>
-              <td><?= $d['proof_of_payment'] ?></td>
+              <td><?= date_format(date_create($d['loan_date']), 'd M Y') ?></td>
+              <td><?= date_format(date_create($d['due_date']), 'd M Y') ?></td>
+              <td>
+                <?php if ($d['status'] === 'done') : ?>
+                  <span class="badge bg-warning text-dark"><?= $d['status'] ?></span>
+                <?php else : ?>
+                  <span class="badge bg-primary text-white"><?= $d['status'] ?></span>
+                <?php endif; ?>
+              </td>
+              <?php if ($d['status'] === 'borrowed') : ?>
+                <td>
+                  <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal<?= $d['borrow_id'] ?>">
+                    Confirm
+                  </button>
+                </td>
+              <?php else : ?>
+                <td>-</td>
+              <?php endif; ?>
             </tr>
           <?php endforeach; ?>
         </tbody>

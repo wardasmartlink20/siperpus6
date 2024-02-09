@@ -98,8 +98,11 @@ class AuthController extends BaseController
         $token = JWT::encode($payload, $key, 'HS256');
 
         $response = [
-            'message' => 'Login Succesfully!',
-            'token' => $token
+            'status' => 200,
+            'data' => [
+                'message' => 'Login Succesfully!',
+                'token' => $token
+            ]
         ];
 
         return $this->respond($response, 200);
@@ -159,14 +162,41 @@ class AuthController extends BaseController
 
             $this->userModel->save($data);
             $response = [
-                'message' => 'Registration Succesfully!',
+                "status" => 200,
+                'data' => [
+                    'message' => 'Registration Succesfully!',
+                ]
             ];
 
             return $this->respond($response, 200);
         } else {
-            $validation = Services::validation();
-            return redirect()->to(base_url('/register'))->withInput()->with('validation', $validation);
+            $response = [
+                "status" => 404,
+                'data' => [
+                    'message' => 'Bad Request!',
+                ]
+            ];
+            return $this->respond($response, 404);
         }
+    }
+
+    public function profileAPi()
+    {
+        $decoded = $this->decodedToken();
+
+        $modelProfile = new UserModel();
+        $data = $modelProfile
+            ->where(['user_id' => $decoded->user_id])
+            ->first();
+
+        $finalData = array_diff_key($data, ['password' => '']);
+
+        $response = [
+            "status" => 200,
+            "data" => $finalData,
+        ];
+
+        return $this->respond($response, 200);
     }
 
     function logout()

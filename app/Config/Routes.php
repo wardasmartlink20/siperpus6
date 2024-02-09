@@ -47,10 +47,17 @@ $routes->get('/logout', 'AuthController::logout');
 $routes->group("", ['filter' => 'cors'], function ($routes) {
   $routes->post('/api/login', 'AuthController::loginApi');
   $routes->post('/api/register', 'AuthController::registerApi');
-  $routes->get('/api/books', 'BookController::listBooksApi');
+  $routes->get('/api/books', 'BookController::listBooksApi', ['filter' => 'authFilter']);
+  $routes->get('/api/books/(:num)', 'BookController::detailBookApi/$1', ['filter' => 'authFilter']);
+  $routes->get('/api/category', 'CategoryController::categoryApi', ['filter' => 'authFilter']);
+  $routes->get('/api/profile', 'AuthController::profileAPi', ['filter' => 'authFilter']);
+  $routes->get('/api/total-fine', 'BorrowingController::getTotalPriceApi', ['filter' => 'authFilter']);
+  $routes->get('/api/borrowing', 'BorrowingController::listBorrowingApi', ['filter' => 'authFilter']);
+  $routes->post('/api/borrowing', 'BorrowingController::borrowingApi', ['filter' => 'authFilter']);
+  $routes->post('/api/review', 'ReviewController::submitReviewApi', ['filter' => 'authFilter']);
 });
 
-
+// MVC
 $routes->group('', ['filter' => 'authGuard'], function ($routes) {
   // BOOKS
   $routes->get('/books', 'BookController::booksView');
@@ -66,6 +73,7 @@ $routes->group('', ['filter' => 'authGuard'], function ($routes) {
 
   // BORROWING
   $routes->get('/borrowing', 'BorrowingController::borrowingView');
+  $routes->get('/borrowing/update/(:num)/(:any)', 'BorrowingController::updateBorrowingStatus/$1/$2');
   $routes->get('/return', 'BorrowingController::returnView');
 });
 
