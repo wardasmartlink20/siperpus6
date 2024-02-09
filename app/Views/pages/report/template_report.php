@@ -1,6 +1,3 @@
-<?= $this->extend('layouts/app') ?>
-
-<?= $this->section('content') ?>
 <div class="container-fluid">
 
   <!-- Page Heading -->
@@ -14,11 +11,11 @@
         <thead style="background-color: #A9AF7E; color: black">
           <tr class="fw-bold">
             <th>No</th>
-            <th>Username</th>
-            <th>Loan Date</th>
-            <th>Due Date</th>
-            <th>Title</th>
-            <th>Total Payment</th>
+            <th style="width: 150px;">Username</th>
+            <th style="width: 150px;">Loan Date</th>
+            <th style="width: 150px;">Due Date</th>
+            <th style="width: 150px;">Title</th>
+            <th style="width: 150px;">Total Payment</th>
           </tr>
         </thead>
         <tbody>
@@ -37,9 +34,4 @@
       </table>
     </div>
   </div>
-
-  <a href="<?php echo base_url(); ?>/report/generate" class="btn p-4" style="position: absolute; bottom: 20px; right: 80px; display: flex; justify-content: center; align-items: center; width: 100px; height: 100px; border-radius: 50%; background-color: #A9AF7E; cursor: pointer">
-    <i class="fa-solid fa-print text-white" style="font-size: 3rem;"></i>
-  </a>
 </div>
-<?= $this->endSection() ?>

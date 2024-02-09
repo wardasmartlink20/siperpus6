@@ -69,7 +69,8 @@ $routes->group('', ['filter' => 'authGuard'], function ($routes) {
   $routes->get('/payment', 'BorrowingController::paymentView');
 
   // REPORTS
-  $routes->get('/report', 'ReportController::reportView');
+  $routes->get('/report', 'BorrowingController::reportView');
+  $routes->get('/report/generate', 'BorrowingController::generate');
 
   // BORROWING
   $routes->get('/borrowing', 'BorrowingController::borrowingView');

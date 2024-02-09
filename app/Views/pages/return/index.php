@@ -30,8 +30,8 @@
               <td><?= $i++ ?></td>
               <td><?= $d['user_name'] ?></td>
               <td><?= $d['title'] ?></td>
-              <td><?= date_format(date_create($d['loan_date']), 'd M Y') ?></td>
-              <td><?= date_format(date_create($d['due_date']), 'd M Y') ?></td>
+              <td><?= date_format(date_create($d['loan_date']), 'd/m/Y') ?></td>
+              <td><?= date_format(date_create($d['due_date']), 'd/m/Y') ?></td>
               <td><?= 'Rp ' . number_format($d['total_fine'], 0, ',', '.') ?></td>
               <td>
                 <?php if ($d['status'] === 'done') : ?>

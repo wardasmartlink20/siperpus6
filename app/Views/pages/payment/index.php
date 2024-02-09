@@ -27,7 +27,7 @@
               <td><?= $i++ ?></td>
               <td><?= $d['user_name'] ?></td>
               <td><?= $d['title'] ?></td>
-              <td><?= date_format(date_create($d['updated_at']), 'd M Y') ?></td>
+              <td><?= date_format(date_create($d['updated_at']), 'd/m/Y') ?></td>
               <td><?= 'Rp ' . number_format($d['total_fine'], 0, ',', '.') ?></td>
             </tr>
           <?php endforeach; ?>

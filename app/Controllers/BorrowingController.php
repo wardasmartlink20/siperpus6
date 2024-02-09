@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\BorrowModel;
 use CodeIgniter\API\ResponseTrait;
 use DateTime;
+use Dompdf\Dompdf;
 
 class BorrowingController extends BaseController
 {
@@ -70,8 +71,7 @@ class BorrowingController extends BaseController
             $dueDate = new DateTime($r['due_date']);
             $currentDate = new DateTime();
             $daysDifference = $dueDate->diff($currentDate)->days;
-
-            if ($dueDate < $currentDate) {
+            if ($dueDate >= $currentDate) {
                 $totalFine = 0;
             } else {
                 $totalFine = $daysDifference * 1000;
@@ -100,7 +100,7 @@ class BorrowingController extends BaseController
             $currentDate = new DateTime();
             $daysDifference = $dueDate->diff($currentDate)->days;
 
-            if ($dueDate < $currentDate) {
+            if ($dueDate >= $currentDate) {
                 $totalFine = 0;
             } else {
                 $totalFine = $daysDifference * 1000;
@@ -113,6 +113,80 @@ class BorrowingController extends BaseController
             "data" => $response,
         ];
         return view('pages/payment/index', $data);
+    }
+
+    public function reportView()
+    {
+        $return = $this->borrowModel
+            ->where('status', 'done')
+            ->join('users', 'users.user_id = borrows.user_id')
+            ->join('books', 'books.book_id = borrows.book_id')
+            ->findAll();
+
+        $response = [];
+        foreach ($return as $r) {
+            $dueDate = new DateTime($r['due_date']);
+            $currentDate = new DateTime();
+            $daysDifference = $dueDate->diff($currentDate)->days;
+
+            if ($dueDate >= $currentDate) {
+                $totalFine = 0;
+            } else {
+                $totalFine = $daysDifference * 1000;
+            }
+
+            $response[] = array_merge($r, ['total_fine' => $totalFine]);
+        }
+
+        $data = [
+            "data" => $response,
+        ];
+        return view('pages/report/index', $data);
+    }
+
+    public function generate()
+    {
+        $return = $this->borrowModel
+            ->where('status', 'done')
+            ->join('users', 'users.user_id = borrows.user_id')
+            ->join('books', 'books.book_id = borrows.book_id')
+            ->findAll();
+
+        $response = [];
+        foreach ($return as $r) {
+            $dueDate = new DateTime($r['due_date']);
+            $currentDate = new DateTime();
+            $daysDifference = $dueDate->diff($currentDate)->days;
+
+            if ($dueDate >= $currentDate) {
+                $totalFine = 0;
+            } else {
+                $totalFine = $daysDifference * 1000;
+            }
+
+            $response[] = array_merge($r, ['total_fine' => $totalFine]);
+        }
+
+        $data = [
+            "data" => $response,
+        ];
+
+        $filename = date('y-m-d-H-i-s') . '-report';
+
+        // instantiate and use the dompdf class
+        $dompdf = new Dompdf();
+
+        // load HTML content
+        $dompdf->loadHtml(view('pages/report/template_report', $data));
+
+        // (optional) setup the paper size and orientation
+        $dompdf->setPaper('A4', 'landscape');
+
+        // render html as PDF
+        $dompdf->render();
+
+        // output the generated pdf
+        $dompdf->stream($filename);
     }
 
     public function listBorrowingApi()

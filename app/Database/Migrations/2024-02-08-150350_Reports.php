@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Payments extends Migration
+class Reports extends Migration
 {
     protected $forge;
     public function __construct()
@@ -15,7 +15,7 @@ class Payments extends Migration
     public function up()
     {
         $this->forge->addField([
-            'payment_id' => [
+            'report_id' => [
                 'type' => 'INT',
                 'constraint' => 10,
                 'unsigned' => true,
@@ -26,29 +26,15 @@ class Payments extends Migration
                 'constraint' => 10,
                 'unsigned' => true,
             ],
-            'date' => [
-                'type' => 'DATETIME',
-                'null' => true,
-            ],
-            'total' => [
-                'type' => 'INT',
-                'constraint' => 100,
-                'null' => true,
-            ],
-            'proof_of_payment' => [
-                'type' => 'VARCHAR',
-                'constraint' => 100,
-                'null' => true,
-            ]
         ]);
 
-        $this->forge->addKey('payment_id', true);
+        $this->forge->addKey('report_id', true);
         $this->forge->addForeignKey('borrow_id', 'borrows', 'borrow_id');
-        $this->forge->createTable('payments');
+        $this->forge->createTable('reports');
     }
 
     public function down()
     {
-        $this->forge->dropTable('payments');
+        $this->forge->dropTable('reports');
     }
 }

@@ -42,8 +42,8 @@
               <td><?= $i++ ?></td>
               <td><?= $d['user_name'] ?></td>
               <td><?= $d['title'] ?></td>
-              <td><?= date_format(date_create($d['loan_date']), 'd M Y') ?></td>
-              <td><?= date_format(date_create($d['due_date']), 'd M Y') ?></td>
+              <td><?= date_format(date_create($d['loan_date']), 'd/m/Y') ?></td>
+              <td><?= date_format(date_create($d['due_date']), 'd/m/Y') ?></td>
               <td>
                 <?php if ($d['status'] === 'process') : ?>
                   <span class="badge bg-warning text-dark"><?= $d['status'] ?></span>
