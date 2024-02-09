@@ -73,7 +73,7 @@ $routes->group('', ['filter' => 'authGuard'], function ($routes) {
 
   // BORROWING
   $routes->get('/borrowing', 'BorrowingController::borrowingView');
-  $routes->get('/borrowing/update/(:num)/(:any)', 'BorrowingController::updateBorrowingStatus/$1/$2');
+  $routes->get('/borrowing/update/(:num)/(:any)/(:any)', 'BorrowingController::updateBorrowingStatus/$1/$2/$3');
   $routes->get('/return', 'BorrowingController::returnView');
 });
 

@@ -5,7 +5,7 @@
 
   <!-- Page Heading -->
   <h1 class="title h3 text-grey-900">Borrowing Data</h1>
-  
+
   <?php if (session()->getFlashData('failed')) : ?>
     <div class="alert alert-danger" role="alert">
       <?php echo session("failed") ?>
@@ -82,7 +82,7 @@
           </div>
           <div class="modal-footer" style="justify-content: center; gap: 16px">
             <button class="btn btn-secondary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">No</button>
-            <form class="d-inline" method="put" action="<?= base_url(); ?>/borrowing/update/<?= $d['book_id'] ?>/borrowed">
+            <form class="d-inline" method="put" action="<?= base_url(); ?>/borrowing/update/<?= $d['book_id'] ?>/borrowed/borrowing">
               <button type="submit" class="btn btn-primary">Yes</button>
             </form>
           </div>

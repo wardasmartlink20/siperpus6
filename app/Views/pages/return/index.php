@@ -33,7 +33,7 @@
               <td><?= date_format(date_create($d['due_date']), 'd M Y') ?></td>
               <td>
                 <?php if ($d['status'] === 'done') : ?>
-                  <span class="badge bg-warning text-dark"><?= $d['status'] ?></span>
+                  <span class="badge bg-success text-white"><?= $d['status'] ?></span>
                 <?php else : ?>
                   <span class="badge bg-primary text-white"><?= $d['status'] ?></span>
                 <?php endif; ?>
@@ -54,4 +54,28 @@
     </div>
   </div>
 </div>
+
+<!-- modal confirm -->
+<?php foreach ($data as $d) : ?>
+  <div class="modal fade" id="confirmModal<?= $d['borrow_id'] ?>" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body d-flex flex-column justify-content-center text-center">
+          <div class="icon-modal">
+            <i class="fa-solid fa-circle-exclamation"></i>
+          </div>
+          <div class="text-body-modal">
+            Are you sure want to confirm this data?
+          </div>
+          <div class="modal-footer" style="justify-content: center; gap: 16px">
+            <button class="btn btn-secondary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">No</button>
+            <form class="d-inline" method="put" action="<?= base_url(); ?>/borrowing/update/<?= $d['book_id'] ?>/done/return">
+              <button type="submit" class="btn btn-primary">Yes</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<?php endforeach; ?>
 <?= $this->endSection() ?>

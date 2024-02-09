@@ -32,7 +32,7 @@ class BorrowingController extends BaseController
         return view('pages/borrowing/index', $data);
     }
 
-    public function updateBorrowingStatus($id, $status)
+    public function updateBorrowingStatus($id, $status, $type)
     {
         $current = $this->borrowModel
             ->where(['borrow_id' => $id])
@@ -48,7 +48,11 @@ class BorrowingController extends BaseController
         ];
         $this->borrowModel->replace($data);
         session()->setFlashdata('success', 'Update Status Successfully.');
-        return redirect()->to(base_url("/borrowing"));
+        if ($type == 'borrowing') {
+            return redirect()->to(base_url("/borrowing"));
+        } else {
+            return redirect()->to(base_url("/return"));
+        }
     }
 
     public function returnView()
