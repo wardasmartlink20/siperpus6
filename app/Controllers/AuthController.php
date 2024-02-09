@@ -32,13 +32,10 @@ class AuthController extends BaseController
         $data = $userModel
             ->where('role !=', 'user')
             ->where('email', $email)->first();
-        // dd($data);
 
         if ($data) {
             $pass = $data['password'];
-            // dd($pass);
             $authenticatePassword = password_verify($password, $pass);
-            // dd($authenticatePassword);
             if ($authenticatePassword) {
                 $ses_data = [
                     'user_id' => $data['user_id'],
@@ -50,7 +47,11 @@ class AuthController extends BaseController
 
                 $session->set($ses_data);
 
-                return redirect()->to(base_url('/books'));
+                if ($data['role'] == 'admin') {
+                    return redirect()->to(base_url('/books'));
+                } else {
+                    return redirect()->to(base_url('/borrowing'));
+                }
             } else {
                 $session->setFlashdata('failed', 'Password is incorrect.');
                 return redirect()->to(base_url('/login'));
@@ -88,7 +89,10 @@ class AuthController extends BaseController
             "sub" => "Subject of the JWT",
             "iat" => $iat, //Time the JWT issued at
             "exp" => $exp, // Expiration time of token
+            "user_id" => $user['user_id'],
+            "user_name" => $user['user_name'],
             "email" => $user['email'],
+            "role" => $user['role'],
         );
 
         $token = JWT::encode($payload, $key, 'HS256');
@@ -157,7 +161,7 @@ class AuthController extends BaseController
             $response = [
                 'message' => 'Registration Succesfully!',
             ];
-    
+
             return $this->respond($response, 200);
         } else {
             $validation = Services::validation();

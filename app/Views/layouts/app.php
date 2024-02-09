@@ -73,7 +73,7 @@
                             <ul class="navbar-nav">
                                 <li class="nav-item dropdown">
                                     <a class="nav-link text-gray-600" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Hai, <?= session()->get('user_name') ?>! <i class="fa-solid fa-chevron-down ml-2"></i>
+                                        Hai, <?= session()->get('user_name') ?>! <i class="fa-solid fa-chevron-down ml-2" style="font-size: 14px;"></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
                                         <li><a class="dropdown-item" href="<?php echo base_url(); ?>/logout"><i class="fa-solid fa-power-off mr-2"></i>Logout</a></li>

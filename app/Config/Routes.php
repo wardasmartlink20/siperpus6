@@ -58,8 +58,15 @@ $routes->group('', ['filter' => 'authGuard'], function ($routes) {
   $routes->put('/books/update/(:num)', 'BookController::update/$1');
   $routes->post('/books/delete/(:num)', 'BookController::delete/$1');
 
+  // PAYMENTS
   $routes->get('/payment', 'PaymentController::paymentView');
+
+  // REPORTS
   $routes->get('/report', 'ReportController::reportView');
+
+  // BORROWING
+  $routes->get('/borrowing', 'BorrowingController::borrowingView');
+  $routes->get('/return', 'BorrowingController::returnView');
 });
 
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {

@@ -11,19 +11,37 @@
   <!-- Divider -->
   <hr class="sidebar-divider">
 
-  <!-- Nav Item - Pages Collapse Menu -->
-  <li class="nav-item">
-    <a class="nav-link" href="books">
-      <span>Manage Book Data</span></a>
-  </li>
+  <?php if (session()->get('role') == 'admin') : ?>
+    <!-- MENU ADMIN -->
+    <li class="nav-item">
+      <a class="nav-link" href="books">
+        <span>Manage Book Data</span></a>
+    </li>
 
-  <li class="nav-item">
-    <a class="nav-link" href="payment">
-      <span>Payment</span></a>
-  </li>
-  <!-- Nav Item - Utilities Collapse Menu -->
-  <li class="nav-item">
-    <a class="nav-link" href="report">
-      <span>Generate Laporan</span></a>
-  </li>
+    <li class="nav-item">
+      <a class="nav-link" href="payment">
+        <span>Payment</span></a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" href="report">
+        <span>Generate Report</span></a>
+    </li>
+  <?php else : ?>
+    <!-- MENU PETUGAS -->
+    <li class="nav-item">
+      <a class="nav-link" href="borrowing">
+        <span>Borrowing Book</span></a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" href="return">
+        <span>Return Book</span></a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" href="report">
+        <span>Generate Report</span></a>
+    </li>
+  <?php endif; ?>
 </ul>
