@@ -82,7 +82,7 @@
           </div>
           <div class="modal-footer" style="justify-content: center; gap: 16px">
             <button class="btn btn-secondary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">No</button>
-            <form class="d-inline" method="put" action="<?= base_url(); ?>/borrowing/update/<?= $d['book_id'] ?>/borrowed/borrowing">
+            <form class="d-inline" method="put" action="<?= base_url(); ?>/borrowing/update/<?= $d['borrow_id'] ?>/borrowed/borrowing">
               <button type="submit" class="btn btn-primary">Yes</button>
             </form>
           </div>

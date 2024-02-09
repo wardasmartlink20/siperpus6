@@ -43,7 +43,11 @@ class Borrows extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => 50,
                 'null' => true,
-            ]
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
         ]);
 
         $this->forge->addKey('borrow_id', true);

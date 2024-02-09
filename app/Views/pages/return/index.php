@@ -18,6 +18,7 @@
             <th>Title</th>
             <th>Loan Date</th>
             <th>Due Date</th>
+            <th>Total Fine</th>
             <th>Status</th>
             <th>Confirmation</th>
           </tr>
@@ -31,9 +32,14 @@
               <td><?= $d['title'] ?></td>
               <td><?= date_format(date_create($d['loan_date']), 'd M Y') ?></td>
               <td><?= date_format(date_create($d['due_date']), 'd M Y') ?></td>
+              <td><?= 'Rp ' . number_format($d['total_fine'], 0, ',', '.') ?></td>
               <td>
                 <?php if ($d['status'] === 'done') : ?>
-                  <span class="badge bg-success text-white"><?= $d['status'] ?></span>
+                  <?php if ($d['updated_at'] > $d['due_date']) : ?>
+                    <span class="badge bg-danger text-white"><?= $d['status'] ?></span>
+                  <?php else : ?>
+                    <span class="badge bg-success text-white"><?= $d['status'] ?></span>
+                  <?php endif; ?>
                 <?php else : ?>
                   <span class="badge bg-primary text-white"><?= $d['status'] ?></span>
                 <?php endif; ?>
@@ -69,7 +75,7 @@
           </div>
           <div class="modal-footer" style="justify-content: center; gap: 16px">
             <button class="btn btn-secondary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">No</button>
-            <form class="d-inline" method="put" action="<?= base_url(); ?>/borrowing/update/<?= $d['book_id'] ?>/done/return">
+            <form class="d-inline" method="put" action="<?= base_url(); ?>/borrowing/update/<?= $d['borrow_id'] ?>/done/return">
               <button type="submit" class="btn btn-primary">Yes</button>
             </form>
           </div>

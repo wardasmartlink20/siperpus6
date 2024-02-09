@@ -44,7 +44,8 @@ class BorrowingController extends BaseController
             "book_id" => $current['book_id'],
             "loan_date" => $current['loan_date'],
             "due_date" => $current['due_date'],
-            "status" => $status
+            "status" => $status,
+            "updated_at" => date('Y/m/d'),
         ];
         $this->borrowModel->replace($data);
         session()->setFlashdata('success', 'Update Status Successfully.');
@@ -64,8 +65,23 @@ class BorrowingController extends BaseController
             ->join('books', 'books.book_id = borrows.book_id')
             ->findAll();
 
+        $response = [];
+        foreach ($return as $r) {
+            $dueDate = new DateTime($r['due_date']);
+            $currentDate = new DateTime();
+            $daysDifference = $dueDate->diff($currentDate)->days;
+
+            if ($dueDate < $currentDate) {
+                $totalFine = 0;
+            } else {
+                $totalFine = $daysDifference * 1000;
+            }
+
+            $response[] = array_merge($r, ['total_fine' => $totalFine]);
+        }
+
         $data = [
-            "data" => $return,
+            "data" => $response,
         ];
         return view('pages/return/index', $data);
     }
@@ -98,6 +114,7 @@ class BorrowingController extends BaseController
             'loan_date' => $loanDate,
             'due_date' => $dueDate,
             'status' => 'process',
+            'updated_at' => date('Y/m/d'),
         ];
 
         $this->borrowModel->save($data);
@@ -109,7 +126,7 @@ class BorrowingController extends BaseController
         return $this->respond($response, 200);
     }
 
-    public function getTotalPriceApi()
+    public function getTotalFineApi()
     {
         $decoded = $this->decodedToken();
         $data = $this->borrowModel
@@ -123,13 +140,16 @@ class BorrowingController extends BaseController
         $currentDate = new DateTime();
         $daysDifference = $dueDate->diff($currentDate)->days;
 
-        // Multiply the difference by 1000
-        $result = $daysDifference * 1000;
+        if ($dueDate < $currentDate) {
+            $totalFine = 0;
+        } else {
+            $totalFine = $daysDifference * 1000;
+        }
 
         $response = [
             'status' => 200,
             'data' => [
-                'total_fine' => $result
+                'total_fine' => $totalFine
             ],
         ];
 
