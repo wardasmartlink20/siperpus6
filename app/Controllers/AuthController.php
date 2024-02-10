@@ -98,11 +98,8 @@ class AuthController extends BaseController
         $token = JWT::encode($payload, $key, 'HS256');
 
         $response = [
-            'status' => 200,
-            'data' => [
-                'message' => 'Login Succesfully!',
-                'token' => $token
-            ]
+            'message' => 'Login Succesfully!',
+            'token' => $token,
         ];
 
         return $this->respond($response, 200);
@@ -163,18 +160,14 @@ class AuthController extends BaseController
             $this->userModel->save($data);
             $response = [
                 "status" => 200,
-                'data' => [
-                    'message' => 'Registration Succesfully!',
-                ]
+                'message' => 'Registration Succesfully!',
             ];
 
             return $this->respond($response, 200);
         } else {
             $response = [
                 "status" => 404,
-                'data' => [
-                    'message' => 'Bad Request!',
-                ]
+                'message' => 'Bad Request!',
             ];
             return $this->respond($response, 404);
         }
