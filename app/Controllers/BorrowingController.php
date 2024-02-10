@@ -97,10 +97,10 @@ class BorrowingController extends BaseController
         $response = [];
         foreach ($return as $r) {
             $dueDate = new DateTime($r['due_date']);
-            $currentDate = new DateTime();
-            $daysDifference = $dueDate->diff($currentDate)->days;
+            $updatedAt = new DateTime($r['updated_at']);
+            $daysDifference = $dueDate->diff($updatedAt)->days;
 
-            if ($dueDate >= $currentDate) {
+            if ($dueDate >= $updatedAt) {
                 $totalFine = 0;
             } else {
                 $totalFine = $daysDifference * 1000;
