@@ -1,7 +1,7 @@
 <div class="container-fluid">
 
   <!-- Page Heading -->
-  <h1 class="title h3 text-grey-900">Generate Report</h1>
+  <h1 class="title h3 text-grey-900">Report</h1>
   <div class="card-body py-3">
     <!-- begin::Table container -->
     <div class="table-responsive">

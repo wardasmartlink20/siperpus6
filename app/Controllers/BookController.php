@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\BookModel;
+use App\Models\BorrowModel;
 use App\Models\CategoryModel;
 use App\Models\ReviewModel;
 use CodeIgniter\API\ResponseTrait;
@@ -12,12 +13,13 @@ class BookController extends BaseController
 {
     use ResponseTrait;
 
-    protected $bookModel, $categoryModel, $reviewModel, $books;
+    protected $bookModel, $categoryModel, $reviewModel, $borrowModel, $books;
     public function __construct()
     {
         $this->bookModel = new BookModel();
         $this->categoryModel = new CategoryModel();
         $this->reviewModel = new ReviewModel();
+        $this->borrowModel = new BorrowModel();
         $this->books = $this->bookModel
             ->join('categories', 'categories.category_id = books.category_id')
             ->findAll();
@@ -135,6 +137,22 @@ class BookController extends BaseController
         ];
 
         // Return the response
+        return $this->respond($response, 200);
+    }
+
+    public function getPopularBooks()
+    {
+        $builder = $this->borrowModel;
+        $builder->select('books.*, COUNT(borrows.book_id) as borrow_count');
+        $builder->join('books', 'books.book_id = borrows.book_id');
+        $builder->groupBy('borrows.book_id');
+        $builder->orderBy('borrow_count', 'DESC');
+        
+        $response = [
+            "status" => 200,
+            "data" => $builder->get()->getResult(),
+        ];
+
         return $this->respond($response, 200);
     }
 

@@ -48,6 +48,7 @@ $routes->group("", ['filter' => 'cors'], function ($routes) {
   $routes->post('/api/login', 'AuthController::loginApi');
   $routes->post('/api/register', 'AuthController::registerApi');
   $routes->get('/api/books', 'BookController::listBooksApi', ['filter' => 'authFilter']);
+  $routes->get('/api/popular-books', 'BookController::getPopularBooks', ['filter' => 'authFilter']);
   $routes->get('/api/books/(:num)', 'BookController::detailBookApi/$1', ['filter' => 'authFilter']);
   $routes->get('/api/category', 'CategoryController::categoryApi', ['filter' => 'authFilter']);
   $routes->get('/api/profile', 'AuthController::profileAPi', ['filter' => 'authFilter']);
