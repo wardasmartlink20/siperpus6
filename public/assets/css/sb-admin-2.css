@@ -11436,3 +11436,11 @@ body.sidebar-toggled footer.sticky-footer {
 .content form {
   margin-bottom: 30px;
 }
+
+.page-item .page-link {
+  color:  #A9AF7E;
+}
+.page-item.active .page-link {
+  background-color: #A9AF7E;
+  border-color: #A9AF7E;
+}

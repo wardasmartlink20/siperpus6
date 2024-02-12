@@ -117,11 +117,44 @@ class BorrowingController extends BaseController
 
     public function reportView()
     {
-        $return = $this->borrowModel
-            ->where('status', 'done')
+        $date = $this->request->getVar('date');
+        $currentPage = $this->request->getVar('page') ? (int)$this->request->getVar('page') : 1;
+        $totalLimit = 1;
+
+        $query = $this->borrowModel
+            ->select('borrows.*, users.user_name, books.title')
             ->join('users', 'users.user_id = borrows.user_id')
             ->join('books', 'books.book_id = borrows.book_id')
-            ->findAll();
+            ->where('status', 'done');
+
+        $return = [];
+        if ($date) {
+            $return = $query
+                ->where('DATE(loan_date)', $date)
+                ->findAll($totalLimit, $currentPage - 1);
+        } else {
+            $return = $query->findAll($totalLimit, $currentPage - 1);
+        }
+
+        $totalRows = 0;
+        if ($date) {
+            $totalRows = $this->borrowModel
+                ->select('borrows.*, users.user_name, books.title')
+                ->join('users', 'users.user_id = borrows.user_id')
+                ->join('books', 'books.book_id = borrows.book_id')
+                ->where('status', 'done')
+                ->where('DATE(loan_date)', $date)
+                ->countAllResults();
+        } else {
+            $totalRows = $this->borrowModel
+                ->select('borrows.*, users.user_name, books.title')
+                ->join('users', 'users.user_id = borrows.user_id')
+                ->join('books', 'books.book_id = borrows.book_id')
+                ->where('status', 'done')
+                ->countAllResults();
+        }
+
+        $totalPages = ceil($totalRows / $totalLimit);
 
         $response = [];
         foreach ($return as $r) {
@@ -140,7 +173,12 @@ class BorrowingController extends BaseController
 
         $data = [
             "data" => $response,
+            "pager" => [
+                "totalPages" => $totalPages,
+                "currentPage" => $currentPage,
+            ],
         ];
+
         return view('pages/report/index', $data);
     }
 

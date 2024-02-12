@@ -86,7 +86,7 @@
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
-            <div id="content">
+            <div id="content" class="pt-4">
                 <?= $this->renderSection('content') ?>
             </div>
             <!-- end::Tables Widget 9 -->
@@ -110,6 +110,7 @@
             }
         }
     </script>
+    <?= $this->renderSection('scripts') ?>
 
 </body>
 

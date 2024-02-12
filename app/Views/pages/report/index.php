@@ -4,7 +4,10 @@
 <div class="container-fluid">
 
   <!-- Page Heading -->
-  <h1 class="title h3 text-grey-900">Generate Report</h1>
+  <div class="d-flex justify-content-between mr-4">
+    <h1 class="title h3 text-grey-900">Generate Report</h1>
+    <input type="date" class="px-3" id="filter" style="border-radius: 10px;background-color: #A9AF7E">
+  </div>
   <div class="card-body py-3">
     <!-- begin::Table container -->
     <div class="table-responsive">
@@ -35,6 +38,11 @@
           <?php endforeach; ?>
         </tbody>
       </table>
+      <nav aria-label="Page navigation example" class="pl-2">
+        <ul class="pagination" id="pagination">
+          <!-- Pagination links will be added dynamically here -->
+        </ul>
+      </nav>
     </div>
   </div>
 
@@ -42,4 +50,56 @@
     <i class="fa-solid fa-print text-white" style="font-size: 3rem;"></i>
   </a>
 </div>
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+<script type="text/javascript">
+  var filterInput = document.getElementById('filter');
+  var currentURL = window.location.search;
+  var urlParams = new URLSearchParams(currentURL);
+  var dateParam = urlParams.get('date');
+  var pageParam = urlParams.get('page');
+
+  if (urlParams.has('date')) {
+    filterInput.value = dateParam;
+  }
+
+  filterInput.addEventListener('change', function() {
+    var selectedDate = filterInput.value;
+    if (selectedDate) {
+      window.location.replace(`<?php echo base_url(); ?>report?date=${selectedDate}&page=1`);
+    } else {
+      window.location.replace(`<?php echo base_url(); ?>report?page=1`);
+    }
+  });
+
+  // PAGINATION
+  function handlePagination(pageNumber) {
+    window.location.replace(`<?php echo base_url(); ?>report?date=${dateParam || ""}&page=${pageNumber}`);
+  }
+
+  var paginationContainer = document.getElementById('pagination');
+  var totalPages = <?= $pager["totalPages"] ?>;
+  for (var i = 1; i <= totalPages; i++) {
+    var pageItem = document.createElement('li');
+    pageItem.classList.add('page-item');
+    pageItem.classList.add('primary');
+    if (i === <?= $pager["currentPage"] ?>) {
+      pageItem.classList.add('active');
+    }
+
+    var pageLink = document.createElement('a');
+    pageLink.classList.add('page-link');
+    pageLink.href = 'javascript:void(0);'
+    pageLink.textContent = i;
+
+    pageLink.addEventListener('click', function() {
+      var pageNumber = parseInt(this.textContent);
+      handlePagination(pageNumber);
+    });
+
+    pageItem.appendChild(pageLink);
+    paginationContainer.appendChild(pageItem);
+  }
+</script>
 <?= $this->endSection() ?>
