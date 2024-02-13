@@ -20,15 +20,31 @@ class BorrowingController extends BaseController
 
     public function borrowingView()
     {
+        $currentPage = $this->request->getVar('page') ? (int)$this->request->getVar('page') : 1;
+        $totalLimit = 10;
+        $offset = ($currentPage - 1) * $totalLimit;
+
         $borrowing = $this->borrowModel
             ->where('status', 'process')
             ->orWhere('status', 'borrowed')
             ->join('users', 'users.user_id = borrows.user_id')
             ->join('books', 'books.book_id = borrows.book_id')
-            ->findAll();
+            ->findAll($totalLimit, $offset);
 
+        $totalRows = $this->borrowModel
+            ->where('status', 'process')
+            ->orWhere('status', 'borrowed')
+            ->join('users', 'users.user_id = borrows.user_id')
+            ->join('books', 'books.book_id = borrows.book_id')
+            ->countAllResults();
+
+        $totalPages = ceil($totalRows / $totalLimit);
         $data = [
             "data" => $borrowing,
+            "pager" => [
+                "totalPages" => $totalPages,
+                "currentPage" => $currentPage,
+            ],
         ];
         return view('pages/borrowing/index', $data);
     }
@@ -59,12 +75,25 @@ class BorrowingController extends BaseController
 
     public function returnView()
     {
+        $currentPage = $this->request->getVar('page') ? (int)$this->request->getVar('page') : 1;
+        $totalLimit = 10;
+        $offset = ($currentPage - 1) * $totalLimit;
+
         $return = $this->borrowModel
             ->where('status', 'borrowed')
             ->orWhere('status', 'done')
             ->join('users', 'users.user_id = borrows.user_id')
             ->join('books', 'books.book_id = borrows.book_id')
-            ->findAll();
+            ->findAll($totalLimit, $offset);
+
+        $totalRows = $this->borrowModel
+            ->where('status', 'borrowed')
+            ->orWhere('status', 'done')
+            ->join('users', 'users.user_id = borrows.user_id')
+            ->join('books', 'books.book_id = borrows.book_id')
+            ->countAllResults();
+
+        $totalPages = ceil($totalRows / $totalLimit);
 
         $response = [];
         foreach ($return as $r) {
@@ -82,18 +111,32 @@ class BorrowingController extends BaseController
 
         $data = [
             "data" => $response,
+            "pager" => [
+                "totalPages" => $totalPages,
+                "currentPage" => $currentPage,
+            ],
         ];
         return view('pages/return/index', $data);
     }
 
     public function paymentView()
     {
+        $currentPage = $this->request->getVar('page') ? (int)$this->request->getVar('page') : 1;
+        $totalLimit = 10;
+        $offset = ($currentPage - 1) * $totalLimit;
         $return = $this->borrowModel
             ->where('status', 'done')
             ->join('users', 'users.user_id = borrows.user_id')
             ->join('books', 'books.book_id = borrows.book_id')
-            ->findAll();
+            ->findAll($totalLimit, $offset);
 
+        $totalRows = $this->borrowModel
+            ->where('status', 'done')
+            ->join('users', 'users.user_id = borrows.user_id')
+            ->join('books', 'books.book_id = borrows.book_id')
+            ->countAllResults();
+
+        $totalPages = ceil($totalRows / $totalLimit);
         $response = [];
         foreach ($return as $r) {
             $dueDate = new DateTime($r['due_date']);
@@ -111,6 +154,10 @@ class BorrowingController extends BaseController
 
         $data = [
             "data" => $response,
+            "pager" => [
+                "totalPages" => $totalPages,
+                "currentPage" => $currentPage,
+            ],
         ];
         return view('pages/payment/index', $data);
     }
@@ -119,8 +166,8 @@ class BorrowingController extends BaseController
     {
         $date = $this->request->getVar('date');
         $currentPage = $this->request->getVar('page') ? (int)$this->request->getVar('page') : 1;
-        $totalLimit = 1;
-
+        $totalLimit = 10;
+        $offset = ($currentPage - 1) * $totalLimit;
         $query = $this->borrowModel
             ->select('borrows.*, users.user_name, books.title')
             ->join('users', 'users.user_id = borrows.user_id')
@@ -131,9 +178,9 @@ class BorrowingController extends BaseController
         if ($date) {
             $return = $query
                 ->where('DATE(loan_date)', $date)
-                ->findAll($totalLimit, $currentPage - 1);
+                ->findAll($totalLimit, $offset);
         } else {
-            $return = $query->findAll($totalLimit, $currentPage - 1);
+            $return = $query->findAll($totalLimit, $offset);
         }
 
         $totalRows = 0;

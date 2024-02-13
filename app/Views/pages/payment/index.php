@@ -34,6 +34,48 @@
         </tbody>
       </table>
     </div>
+
+    <nav aria-label="Page navigation example" class="pl-2">
+      <ul class="pagination" id="pagination">
+      </ul>
+    </nav>
   </div>
 </div>
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+<script type="text/javascript">
+  var currentURL = window.location.search;
+  var urlParams = new URLSearchParams(currentURL);
+  var pageParam = urlParams.get('page');
+
+  // PAGINATION
+  function handlePagination(pageNumber) {
+    window.location.replace(`<?php echo base_url(); ?>payment?page=${pageNumber}`);
+  }
+
+  var paginationContainer = document.getElementById('pagination');
+  var totalPages = <?= $pager["totalPages"] ?>;
+  for (var i = 1; i <= totalPages; i++) {
+    var pageItem = document.createElement('li');
+    pageItem.classList.add('page-item');
+    pageItem.classList.add('primary');
+    if (i === <?= $pager["currentPage"] ?>) {
+      pageItem.classList.add('active');
+    }
+
+    var pageLink = document.createElement('a');
+    pageLink.classList.add('page-link');
+    pageLink.href = 'javascript:void(0);'
+    pageLink.textContent = i;
+
+    pageLink.addEventListener('click', function() {
+      var pageNumber = parseInt(this.textContent);
+      handlePagination(pageNumber);
+    });
+
+    pageItem.appendChild(pageLink);
+    paginationContainer.appendChild(pageItem);
+  }
+</script>
 <?= $this->endSection() ?>

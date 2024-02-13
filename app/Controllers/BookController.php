@@ -27,10 +27,26 @@ class BookController extends BaseController
 
     public function booksView()
     {
+        $currentPage = $this->request->getVar('page') ? (int)$this->request->getVar('page') : 1;
         $categories = $this->categoryModel->findAll();
+        $totalLimit = 10;
+        $offset = ($currentPage - 1) * $totalLimit;
+        $books = $this->bookModel
+            ->join('categories', 'categories.category_id = books.category_id')
+            ->findAll($totalLimit, $offset);
+
+        $totalRows = $this->bookModel
+            ->join('categories', 'categories.category_id = books.category_id')
+            ->countAllResults();
+
+        $totalPages = ceil($totalRows / $totalLimit);
         $data = [
-            "data" => $this->books,
+            "data" => $books,
             "categories" => $categories,
+            "pager" => [
+                "totalPages" => $totalPages,
+                "currentPage" => $currentPage,
+            ],
         ];
         return view('pages/books/index', $data);
     }
@@ -147,7 +163,7 @@ class BookController extends BaseController
         $builder->join('books', 'books.book_id = borrows.book_id');
         $builder->groupBy('borrows.book_id');
         $builder->orderBy('borrow_count', 'DESC');
-        
+
         $response = [
             "status" => 200,
             "data" => $builder->get()->getResult(),

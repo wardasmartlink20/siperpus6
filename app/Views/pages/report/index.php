@@ -40,7 +40,6 @@
       </table>
       <nav aria-label="Page navigation example" class="pl-2">
         <ul class="pagination" id="pagination">
-          <!-- Pagination links will be added dynamically here -->
         </ul>
       </nav>
     </div>
