@@ -287,9 +287,25 @@ class BorrowingController extends BaseController
             ->where(['user_id' => $decoded->user_id])
             ->findAll();
 
+        $response = [];
+
+        foreach ($data as $d) {
+            $dueDate = new DateTime($d['due_date']);
+            $currentDate = new DateTime();
+            $daysDifference = $dueDate->diff($currentDate)->days;
+
+            if ($dueDate > $currentDate) {
+                $totalFine = 0;
+            } else {
+                $totalFine = $daysDifference * 1000;
+            }
+
+            $response[] = array_merge($d, ['total_fine' => $totalFine]);
+        }
+
         $response = [
             'status' => 200,
-            'data' => $data,
+            'data' => $response,
         ];
 
         return $this->respond($response, 200);
