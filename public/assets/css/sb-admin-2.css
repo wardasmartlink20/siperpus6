@@ -11437,6 +11437,10 @@ body.sidebar-toggled footer.sticky-footer {
   margin-bottom: 30px;
 }
 
+.custom-pagination {
+  padding-left: 5px;
+}
+
 .page-item .page-link {
   color:  #A9AF7E;
 }

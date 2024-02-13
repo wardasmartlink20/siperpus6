@@ -44,6 +44,7 @@ class BorrowingController extends BaseController
             "pager" => [
                 "totalPages" => $totalPages,
                 "currentPage" => $currentPage,
+                "limit" => $totalLimit,
             ],
         ];
         return view('pages/borrowing/index', $data);
@@ -114,6 +115,7 @@ class BorrowingController extends BaseController
             "pager" => [
                 "totalPages" => $totalPages,
                 "currentPage" => $currentPage,
+                "limit" => $totalLimit,
             ],
         ];
         return view('pages/return/index', $data);
@@ -157,6 +159,7 @@ class BorrowingController extends BaseController
             "pager" => [
                 "totalPages" => $totalPages,
                 "currentPage" => $currentPage,
+                "limit" => $totalLimit,
             ],
         ];
         return view('pages/payment/index', $data);
@@ -223,6 +226,7 @@ class BorrowingController extends BaseController
             "pager" => [
                 "totalPages" => $totalPages,
                 "currentPage" => $currentPage,
+                "limit" => $totalLimit,
             ],
         ];
 

@@ -47,10 +47,10 @@
             </tr>
           </thead>
           <tbody>
-            <?php $i = 1; ?>
+            <?php $startIndex = ($pager["currentPage"] - 1) * $pager["limit"] + 1; ?>
             <?php foreach ($data as $d) : ?>
               <tr>
-                <td><?= $i++ ?></td>
+                <td><?= $startIndex++ ?></td>
                 <td><img src="<?= base_url() . $d['thumbnail'] ?>" width="100" style="object-fit: contain;" /></td>
                 <td><?= $d["category_name"] ?></td>
                 <td><?= $d["title"] ?></td>
@@ -69,6 +69,11 @@
           </tbody>
         </table>
       </div>
+      
+      <nav aria-label="Page navigation example" class="custom-navigation">
+        <ul class="pagination" id="pagination">
+        </ul>
+      </nav>
     </div>
 
     <!-- modal create -->
@@ -203,11 +208,6 @@
         </div>
       </div>
     <?php endforeach; ?>
-
-    <nav aria-label="Page navigation example" class="pl-2">
-      <ul class="pagination" id="pagination">
-      </ul>
-    </nav>
   </div>
 </div>
 <?= $this->endSection() ?>

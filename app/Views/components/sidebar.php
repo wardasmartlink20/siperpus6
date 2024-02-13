@@ -27,6 +27,16 @@
       <a class="nav-link" href="report">
         <span>Generate Report</span></a>
     </li>
+
+    <li class="nav-item">
+      <a class="nav-link" href="petugas">
+        <span>Petugas</span></a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" href="category">
+        <span>Book Category</span></a>
+    </li>
   <?php else : ?>
     <!-- MENU PETUGAS -->
     <li class="nav-item">

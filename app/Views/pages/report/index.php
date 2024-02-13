@@ -25,10 +25,10 @@
           </tr>
         </thead>
         <tbody>
-          <?php $i = 1; ?>
+          <?php $startIndex = ($pager["currentPage"] - 1) * $pager["limit"] + 1; ?>
           <?php foreach ($data as $d) : ?>
             <tr>
-              <td><?= $i++ ?></td>
+              <td><?= $startIndex++ ?></td>
               <td><?= $d['user_name'] ?></td>
               <td><?= date_format(date_create($d['loan_date']), 'd/m/Y') ?></td>
               <td><?= date_format(date_create($d['due_date']), 'd/m/Y') ?></td>
@@ -38,7 +38,7 @@
           <?php endforeach; ?>
         </tbody>
       </table>
-      <nav aria-label="Page navigation example" class="pl-2">
+      <nav aria-label="Page navigation example" class="custom-navigation">
         <ul class="pagination" id="pagination">
         </ul>
       </nav>

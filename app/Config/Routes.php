@@ -63,7 +63,7 @@ $routes->group('', ['filter' => 'authGuard'], function ($routes) {
   // BOOKS
   $routes->get('/books', 'BookController::booksView');
   $routes->post('/books/create', 'BookController::create');
-  $routes->put('/books/update/(:num)', 'BookController::update/$1');
+  $routes->post('/books/update/(:num)', 'BookController::update/$1');
   $routes->post('/books/delete/(:num)', 'BookController::delete/$1');
 
   // PAYMENTS
@@ -77,6 +77,16 @@ $routes->group('', ['filter' => 'authGuard'], function ($routes) {
   $routes->get('/borrowing', 'BorrowingController::borrowingView');
   $routes->get('/borrowing/update/(:num)/(:any)/(:any)', 'BorrowingController::updateBorrowingStatus/$1/$2/$3');
   $routes->get('/return', 'BorrowingController::returnView');
+
+  // PETUGAS
+  $routes->get('/petugas', 'PetugasController::index');
+  $routes->post('/petugas/update/(:num)', 'PetugasController::update/$1');
+  $routes->post('/petugas/delete/(:num)', 'PetugasController::delete/$1');
+
+  $routes->get('/category', 'CategoryController::index');
+  $routes->post('/category/create', 'CategoryController::create');
+  $routes->post('/category/update/(:num)', 'CategoryController::update/$1');
+  $routes->post('/category/delete/(:num)', 'CategoryController::delete/$1');
 });
 
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {

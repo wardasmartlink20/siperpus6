@@ -46,6 +46,7 @@ class BookController extends BaseController
             "pager" => [
                 "totalPages" => $totalPages,
                 "currentPage" => $currentPage,
+                "limit" => $totalLimit,
             ],
         ];
         return view('pages/books/index', $data);

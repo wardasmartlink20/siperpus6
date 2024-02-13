@@ -123,6 +123,7 @@ class AuthController extends BaseController
             'address' => 'required',
         ];
 
+        $isPetugas = $this->request->getVar('redirectTo') === "petugas";
         if ($this->validate($rules)) {
             $data = [
                 'user_name' => $this->request->getVar('user_name'),
@@ -134,10 +135,18 @@ class AuthController extends BaseController
 
             $this->userModel->save($data);
             session()->setFlashdata('success', 'Registration Successfully.');
-            return redirect()->to(base_url("/login"));
+            if ($isPetugas) {
+                return redirect()->to(base_url("/petugas"));
+            } else {
+                return redirect()->to(base_url("/login"));
+            }
         } else {
             $validation = Services::validation();
-            return redirect()->to(base_url('/register'))->withInput()->with('validation', $validation);
+            if ($isPetugas) {
+                return redirect()->to(base_url('/petugas'))->withInput()->with('validation', $validation);
+            } else {
+                return redirect()->to(base_url('/register'))->withInput()->with('validation', $validation);
+            }
         }
     }
 
