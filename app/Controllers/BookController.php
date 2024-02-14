@@ -167,7 +167,7 @@ class BookController extends BaseController
 
         $response = [
             "status" => 200,
-            "data" => $builder->get()->getResult(),
+            "data" => $builder->findAll(4),
         ];
 
         return $this->respond($response, 200);
