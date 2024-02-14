@@ -188,26 +188,28 @@
 
   var paginationContainer = document.getElementById('pagination');
   var totalPages = <?= $pager["totalPages"] ?>;
-  for (var i = 1; i <= totalPages; i++) {
-    var pageItem = document.createElement('li');
-    pageItem.classList.add('page-item');
-    pageItem.classList.add('primary');
-    if (i === <?= $pager["currentPage"] ?>) {
-      pageItem.classList.add('active');
+  if (totalPages >= 1) {
+    for (var i = 1; i <= totalPages; i++) {
+      var pageItem = document.createElement('li');
+      pageItem.classList.add('page-item');
+      pageItem.classList.add('primary');
+      if (i === <?= $pager["currentPage"] ?>) {
+        pageItem.classList.add('active');
+      }
+
+      var pageLink = document.createElement('a');
+      pageLink.classList.add('page-link');
+      pageLink.href = 'javascript:void(0);'
+      pageLink.textContent = i;
+
+      pageLink.addEventListener('click', function() {
+        var pageNumber = parseInt(this.textContent);
+        handlePagination(pageNumber);
+      });
+
+      pageItem.appendChild(pageLink);
+      paginationContainer.appendChild(pageItem);
     }
-
-    var pageLink = document.createElement('a');
-    pageLink.classList.add('page-link');
-    pageLink.href = 'javascript:void(0);'
-    pageLink.textContent = i;
-
-    pageLink.addEventListener('click', function() {
-      var pageNumber = parseInt(this.textContent);
-      handlePagination(pageNumber);
-    });
-
-    pageItem.appendChild(pageLink);
-    paginationContainer.appendChild(pageItem);
   }
 </script>
 <?= $this->endSection() ?>
