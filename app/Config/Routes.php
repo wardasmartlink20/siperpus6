@@ -54,7 +54,8 @@ $routes->group("", ['filter' => 'cors'], function ($routes) {
   $routes->get('/api/profile', 'AuthController::profileAPi', ['filter' => 'authFilter']);
   $routes->get('/api/total-fine', 'BorrowingController::getTotalFineApi', ['filter' => 'authFilter']);
   $routes->get('/api/borrowing', 'BorrowingController::listBorrowingApi', ['filter' => 'authFilter']);
-  $routes->post('/api/borrowing', 'BorrowingController::borrowingApi', ['filter' => 'authFilter']);
+  $routes->post('/api/borrowing', 'BorrowingController::postBorrowingBook', ['filter' => 'authFilter']);
+  $routes->post('/api/return', 'BorrowingController::postReturnBook', ['filter' => 'authFilter']);
   $routes->post('/api/review', 'ReviewController::submitReviewApi', ['filter' => 'authFilter']);
 });
 

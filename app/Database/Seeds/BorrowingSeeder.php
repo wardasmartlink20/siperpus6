@@ -14,24 +14,16 @@ class BorrowingSeeder extends Seeder
                 'book_id'  => 2,
                 'loan_date'  =>  "2024-02-05 00:00:00",
                 'due_date'  =>  "2024-02-07 00:00:00",
-                'status' => 'process',
+                'status' => 'process_borrowing',
                 'updated_at'  => '2024-02-07 00:00:00',
             ],
             [
                 'user_id' => 2,
-                'book_id'  => 2,
+                'book_id'  => 1,
                 'loan_date'  =>  "2024-02-05 00:00:00",
                 'due_date'  =>  "2024-02-07 00:00:00",
                 'status' => 'borrowed',
                 'updated_at'  => '2024-02-07 00:00:00',
-            ],
-            [
-                'user_id' => 2,
-                'book_id'  => 2,
-                'loan_date'  =>  "2024-02-05 00:00:00",
-                'due_date'  =>  "2024-02-07 00:00:00",
-                'status' => 'done',
-                'updated_at'  => '2024-02-09 00:00:00',
             ],
         ];
         $this->db->table('borrows')->insertBatch($data);

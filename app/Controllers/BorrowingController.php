@@ -25,14 +25,14 @@ class BorrowingController extends BaseController
         $offset = ($currentPage - 1) * $totalLimit;
 
         $borrowing = $this->borrowModel
-            ->where('status', 'process')
+            ->where('status', 'process_borrowing')
             ->orWhere('status', 'borrowed')
             ->join('users', 'users.user_id = borrows.user_id')
             ->join('books', 'books.book_id = borrows.book_id')
             ->findAll($totalLimit, $offset);
 
         $totalRows = $this->borrowModel
-            ->where('status', 'process')
+            ->where('status', 'process_borrowing')
             ->orWhere('status', 'borrowed')
             ->join('users', 'users.user_id = borrows.user_id')
             ->join('books', 'books.book_id = borrows.book_id')
@@ -81,15 +81,13 @@ class BorrowingController extends BaseController
         $offset = ($currentPage - 1) * $totalLimit;
 
         $return = $this->borrowModel
-            ->where('status', 'borrowed')
-            ->orWhere('status', 'done')
+            ->where('status', 'process_return')
             ->join('users', 'users.user_id = borrows.user_id')
             ->join('books', 'books.book_id = borrows.book_id')
             ->findAll($totalLimit, $offset);
 
         $totalRows = $this->borrowModel
-            ->where('status', 'borrowed')
-            ->orWhere('status', 'done')
+            ->where('status', 'process_return')
             ->join('users', 'users.user_id = borrows.user_id')
             ->join('books', 'books.book_id = borrows.book_id')
             ->countAllResults();
@@ -311,7 +309,7 @@ class BorrowingController extends BaseController
         return $this->respond($response, 200);
     }
 
-    public function borrowingApi()
+    public function postBorrowingBook()
     {
         $decoded = $this->decodedToken();
         $loanDate = date('Y/m/d');
@@ -321,7 +319,7 @@ class BorrowingController extends BaseController
             'book_id' => $this->request->getVar('book_id'),
             'loan_date' => $loanDate,
             'due_date' => $dueDate,
-            'status' => 'process',
+            'status' => 'process_borrowing',
             'updated_at' => date('Y/m/d'),
         ];
 
@@ -333,6 +331,33 @@ class BorrowingController extends BaseController
 
         return $this->respond($response, 200);
     }
+
+    public function postReturnBook()
+    {
+        $decoded = $this->decodedToken();
+        $borrowId =  $this->request->getVar('borrow_id');
+        $currentBook = $this->borrowModel->where("borrow_id", $borrowId)->first();
+        $loanDate = date('Y/m/d');
+        $dueDate = date('Y/m/d', strtotime($loanDate . ' +3 days'));
+        $data = [
+            'borrow_id' => $borrowId,
+            'user_id' => $decoded->user_id,
+            'book_id' => $currentBook['book_id'],
+            'loan_date' => $loanDate,
+            'due_date' => $dueDate,
+            'status' => 'process_return',
+            'updated_at' => date('Y/m/d'),
+        ];
+
+        $this->borrowModel->replace($data);
+        $response = [
+            "status" => 200,
+            'message' => 'Return Book Succesfully!',
+        ];
+
+        return $this->respond($response, 200);
+    }
+
 
     public function getTotalFineApi()
     {

@@ -44,7 +44,7 @@
                   <span class="badge bg-primary text-white"><?= $d['status'] ?></span>
                 <?php endif; ?>
               </td>
-              <?php if ($d['status'] === 'borrowed') : ?>
+              <?php if ($d['status'] === 'process_return') : ?>
                 <td>
                   <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal<?= $d['borrow_id'] ?>">
                     Confirm

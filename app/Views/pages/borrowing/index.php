@@ -45,13 +45,13 @@
               <td><?= date_format(date_create($d['loan_date']), 'd/m/Y') ?></td>
               <td><?= date_format(date_create($d['due_date']), 'd/m/Y') ?></td>
               <td>
-                <?php if ($d['status'] === 'process') : ?>
+                <?php if ($d['status'] === 'process_borrowing') : ?>
                   <span class="badge bg-warning text-dark"><?= $d['status'] ?></span>
                 <?php else : ?>
                   <span class="badge bg-primary text-white"><?= $d['status'] ?></span>
                 <?php endif; ?>
               </td>
-              <?php if ($d['status'] === 'process') : ?>
+              <?php if ($d['status'] === 'process_borrowing') : ?>
                 <td>
                   <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal<?= $d['borrow_id'] ?>">
                     Confirm
