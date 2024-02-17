@@ -115,10 +115,19 @@ class BookController extends BaseController
 
     public function detailBookApi($id)
     {
+        $decoded = $this->decodedToken();
         $book = $this->bookModel
             ->join('categories', 'categories.category_id = books.category_id')
             ->where(['books.book_id' => $id])
             ->first();
+
+        $status = $this->borrowModel
+            ->select('status')
+            ->where(['borrows.user_id' => $decoded->user_id])
+            ->where(['borrows.book_id' => $id])
+            ->first();
+
+        $isStatus = $status ? ($status["status"] ? true : false) : false;
 
         // Initialize an empty array for the final response
         $responseData = [];
@@ -142,9 +151,10 @@ class BookController extends BaseController
         // Append book information and cleaned reviews directly to the response array
         $averageRating = count($reviews) > 0 ? $totalRating / count($reviews) : 0;
 
-        $responseData = array_merge($book, [
+        $responseData = array_merge($book ?? [], [
             'rating' => round($averageRating, 1),
-            'reviews' => $responseReview
+            'reviews' => $responseReview,
+            'status' => $isStatus,
         ]);
 
         // Prepare the final response
