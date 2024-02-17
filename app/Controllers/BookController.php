@@ -154,7 +154,7 @@ class BookController extends BaseController
         $responseData = array_merge($book ?? [], [
             'rating' => round($averageRating, 1),
             'reviews' => $responseReview,
-            'status' => $isStatus,
+            'is_status' => $isStatus,
         ]);
 
         // Prepare the final response
