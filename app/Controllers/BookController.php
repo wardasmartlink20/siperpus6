@@ -174,10 +174,54 @@ class BookController extends BaseController
         $builder->join('books', 'books.book_id = borrows.book_id');
         $builder->groupBy('borrows.book_id');
         $builder->orderBy('borrow_count', 'DESC');
+        $popularBooks = $builder->findAll(4);
+
+        $responseData = [];
+        // Loop through each book
+        foreach ($popularBooks as $book) {
+            // Fetch reviews for the current book
+            $reviews = $this->reviewModel
+                ->join('users', 'users.user_id = reviews.user_id')
+                ->where(['book_id' => $book['book_id']])
+                ->findAll();
+
+            $totalRating = 0;
+            $responseReview = [];
+            foreach ($reviews as $review) {
+                $totalRating += (int)$review['rating'];
+                $responseReview[] = [
+                    'review_id' => $review['review_id'],
+                    'user_name' => $review['user_name'],
+                    'review' => $review['review'],
+                    'rating' => (int)$review['rating'],
+                ];
+            }
+
+            $averageRating = count($reviews) > 0 ? $totalRating / count($reviews) : 0;
+
+            $responseData[] = array_merge($book, [
+                'rating' => round($averageRating, 1),
+                'reviews' => $responseReview
+            ]);
+        }
+
+        $totalRating = 0;
+        $responseReview = [];
+        foreach ($reviews as $review) {
+            $totalRating += (int)$review['rating'];
+            $responseReview[] = [
+                'review_id' => $review['review_id'],
+                'user_name' => $review['user_name'],
+                'review' => $review['review'],
+                'rating' => (int)$review['rating'],
+            ];
+        }
+        // Append book information and cleaned reviews directly to the response array
+        $averageRating = count($reviews) > 0 ? $totalRating / count($reviews) : 0;
 
         $response = [
             "status" => 200,
-            "data" => $builder->findAll(4),
+            "data" => $responseData,
         ];
 
         return $this->respond($response, 200);
