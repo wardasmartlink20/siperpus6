@@ -243,6 +243,8 @@ class BookController extends BaseController
             'synopsis' => $this->request->getVar('synopsis'),
             'thumbnail' => '/assets/books/' . $fileName,
             'category_id' => $this->request->getVar('category_id'),
+            'stock' => $this->request->getVar('stock'),
+            'deleted_at' => null,
         ];
 
         $this->bookModel->save($data);
@@ -262,6 +264,8 @@ class BookController extends BaseController
             'publisher' => $this->request->getVar('publisher'),
             'year_publication' => $this->request->getVar('year_publication'),
             'synopsis' => $this->request->getVar('synopsis'),
+            'stock' => $this->request->getVar('stock'),
+            'deleted_at' => null,
         ];
 
         if ($thumbnail != "") {

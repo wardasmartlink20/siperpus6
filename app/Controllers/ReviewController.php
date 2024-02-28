@@ -25,6 +25,7 @@ class ReviewController extends BaseController
             'book_id' => $this->request->getVar('book_id'),
             'review' => $this->request->getVar('review'),
             'rating' => $this->request->getVar('rating'),
+            'deleted_at' => null,
         ];
 
         $this->reviewModel->save($data);

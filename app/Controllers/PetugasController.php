@@ -59,6 +59,7 @@ class PetugasController extends BaseController
                 'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
                 'address' => $this->request->getVar('address'),
                 'role' => 'petugas',
+                'deleted_at' => null,
             ];
 
             $this->userModel->replace($data);

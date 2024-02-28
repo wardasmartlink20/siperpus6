@@ -131,6 +131,7 @@ class AuthController extends BaseController
                 'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
                 'address' => $this->request->getVar('address'),
                 'role' => 'petugas',
+                'deleted_at' => null,
             ];
 
             $this->userModel->save($data);
@@ -167,6 +168,7 @@ class AuthController extends BaseController
                 'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
                 'address' => $this->request->getVar('address'),
                 'role' => 'user',
+                'deleted_at' => null,
             ];
 
             $this->userModel->save($data);
@@ -214,7 +216,8 @@ class AuthController extends BaseController
             ->first();
             
         $data = [
-            "email" => $this->request->getVar("email")
+            "email" => $this->request->getVar("email"),
+            'deleted_at' => null,
         ];
 
         $response[] = [];

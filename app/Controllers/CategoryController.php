@@ -47,6 +47,7 @@ class CategoryController extends BaseController
         if ($this->validate($rules)) {
             $data = [
                 'category_name' => $this->request->getVar('category_name'),
+                'deleted_at' => null,
             ];
 
             $this->categoryModel->save($data);
@@ -69,6 +70,7 @@ class CategoryController extends BaseController
             $data = [
                 'category_id' => $id,
                 'category_name' => $this->request->getVar('category_name'),
+                'deleted_at' => null,
             ];
 
             $this->categoryModel->replace($data);

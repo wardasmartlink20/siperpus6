@@ -121,6 +121,10 @@
                   <textarea required name="synopsis" class="form-control" id="synopsis" rows="3" aria-describedby="synopsis"></textarea>
                 </div>
                 <div class="form-group">
+                    <label for="synopsis" class="form-label">Stock</label>
+                    <input required name="stock" type="number" class="form-control form-control-user" id="stock" aria-describedby="stock">
+                  </div>
+                <div class="form-group">
                   <label for="thumbnail" class="form-label">Add Photo</label>
                   <input required name="thumbnail" type="file" class="form-control form-control-user" id="thumbnail" aria-describedby="thumbnail">
                 </div>
@@ -168,6 +172,10 @@
                   <div class="form-group">
                     <label for="synopsis" class="form-label">Synopsis</label>
                     <input required name="synopsis" type="text" class="form-control form-control-user" id="synopsis" aria-describedby="synopsis" value="<?= $d['synopsis'] ?>">
+                  </div>
+                  <div class="form-group">
+                    <label for="synopsis" class="form-label">Stock</label>
+                    <input required name="stock" type="number" class="form-control form-control-user" id="stock" aria-describedby="stock" value="<?= $d['stock'] ?>">
                   </div>
                   <div class="form-group">
                     <label for="thumbnail" class="form-label">Add Photo</label>

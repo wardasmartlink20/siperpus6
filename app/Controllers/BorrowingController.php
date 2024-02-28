@@ -57,6 +57,7 @@ class BorrowingController extends BaseController
         $session = session();
         $data = [
             "status" => $status,
+            "deleted_at" => null,
         ];
         if ($status == "done") {
             $data["confirm_by"] = $session->get('user_name');
