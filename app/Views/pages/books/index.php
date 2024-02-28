@@ -42,6 +42,7 @@
               <th>Writer</th>
               <th>Publisher</th>
               <th style="width: 150px;">Year Publication</th>
+              <th>Stock</th>
               <th style="width: 400px;">Synopsis</th>
               <th>Action</th>
             </tr>
@@ -57,6 +58,7 @@
                 <td><?= $d["writer"] ?></td>
                 <td><?= $d["publisher"] ?></td>
                 <td><?= $d["year_publication"] ?></td>
+                <td><?= $d["stock"] ?></td>
                 <td><?= $d["synopsis"] ?></td>
                 <td>
                   <div>
