@@ -17,6 +17,8 @@ class BooksSeeder extends Seeder
                 'year_publication' => '2024',
                 'synopsis'  => 'Novel ini berkisah tentang Meisya Nata Wijaya yang baper dengan Alan Aileen, cowok idaman SMA Cakrawala yang dingin, ganteng, dan wakil ketua geng DRAX.',
                 'category_id'  => 1,
+                'stock' => 10,
+                'deleted_at' => null,
             ],
             [
                 'thumbnail' => '/assets/books/1707419848_93a3093cdbffcbe1426b.png',
@@ -26,6 +28,8 @@ class BooksSeeder extends Seeder
                 'year_publication' => '2024',
                 'synopsis'  => 'Novel ini berkisah tentang pasangan suami istri, Kirana dan Lee, yang mengalami kecelakaan mobil dan masuk jurang. Lee dinyatakan hilang, dan beberapa bulan kemudian Kirana bertemu dengan seorang pemuda yang mirip dengan Lee.',
                 'category_id'  => 2,
+                'stock' => 2,
+                'deleted_at' => null,
             ],
         ];
         $this->db->table('books')->insertBatch($data);

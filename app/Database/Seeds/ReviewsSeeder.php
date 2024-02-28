@@ -14,12 +14,14 @@ class ReviewsSeeder extends Seeder
                 'book_id'  =>  1,
                 'review'  =>  "Bagus Banget",
                 'rating' => 5,
+                'deleted_at' => null,
             ],
             [
                 'user_id'  => 1,
                 'book_id'  =>  1,
                 'review'  =>  "Lumayan",
                 'rating' => 3,
+                'deleted_at' => null,
             ],
         ];
         $this->db->table('reviews')->insertBatch($data);

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\BookModel;
 use App\Models\BorrowModel;
 use CodeIgniter\API\ResponseTrait;
 use DateTime;
@@ -12,10 +13,11 @@ class BorrowingController extends BaseController
 {
     use ResponseTrait;
 
-    protected $borrowModel;
+    protected $borrowModel, $bookModel;
     public function __construct()
     {
         $this->borrowModel = new BorrowModel();
+        $this->bookModel = new BookModel();
     }
 
     public function borrowingView()
@@ -52,20 +54,14 @@ class BorrowingController extends BaseController
 
     public function updateBorrowingStatus($id, $status, $type)
     {
-        $current = $this->borrowModel
-            ->where(['borrow_id' => $id])
-            ->first();
-
+        $session = session();
         $data = [
-            "borrow_id" => $id,
-            "user_id" => $current['user_id'],
-            "book_id" => $current['book_id'],
-            "loan_date" => $current['loan_date'],
-            "due_date" => $current['due_date'],
             "status" => $status,
-            "updated_at" => date('Y/m/d'),
         ];
-        $this->borrowModel->replace($data);
+        if ($status == "done") {
+            $data["confirm_by"] = $session->get('user_name');
+        }
+        $this->borrowModel->update($id, $data);
         session()->setFlashdata('success', 'Update Status Successfully.');
         if ($type == 'borrowing') {
             return redirect()->to(base_url("/borrowing"));
@@ -312,24 +308,46 @@ class BorrowingController extends BaseController
     public function postBorrowingBook()
     {
         $decoded = $this->decodedToken();
+        $bookId = $this->request->getVar('book_id');
         $loanDate = date('Y/m/d');
         $dueDate = date('Y/m/d', strtotime($loanDate . ' +3 days'));
-        $data = [
-            'user_id' => $decoded->user_id,
-            'book_id' => $this->request->getVar('book_id'),
-            'loan_date' => $loanDate,
-            'due_date' => $dueDate,
-            'status' => 'process_borrowing',
-            'updated_at' => date('Y/m/d'),
-        ];
 
-        $this->borrowModel->save($data);
-        $response = [
-            "status" => 200,
-            'message' => 'Borrowing Book Succesfully!',
-        ];
+        $currentBook = $this->bookModel->where("book_id", $bookId)->first();
+        $remainingStock = $currentBook["stock"];
 
-        return $this->respond($response, 200);
+        if ((int)$remainingStock > 0) {
+            $data = [
+                'user_id' => $decoded->user_id,
+                'book_id' => $this->request->getVar('book_id'),
+                'loan_date' => $loanDate,
+                'due_date' => $dueDate,
+                'status' => 'process_borrowing',
+                'deleted_at' => null,
+            ];
+    
+            $this->borrowModel->save($data);
+    
+            $dataBook = [
+                "stock" => (int)$remainingStock - 1,
+            ];
+    
+            $this->bookModel->update($bookId, $dataBook);
+    
+            $response = [
+                "status" => 200,
+                'message' => 'Borrowing Book Succesfully!',
+            ];
+    
+            return $this->respond($response, 200);
+        } else {
+
+            $response = [
+                "status" => 400,
+                'message' => 'Book stock is out of stock!',
+            ];
+    
+            return $this->respond($response, 400);
+        }
     }
 
     public function postReturnBook()
@@ -337,19 +355,29 @@ class BorrowingController extends BaseController
         $decoded = $this->decodedToken();
         $borrowId =  $this->request->getVar('borrow_id');
         $currentBook = $this->borrowModel->where("borrow_id", $borrowId)->first();
+        $bookId = $currentBook['book_id'];
+        $currentBook = $this->bookModel->where("book_id", $bookId)->first();
+        $remainingStock = $currentBook["stock"];
+
         $loanDate = date('Y/m/d');
         $dueDate = date('Y/m/d', strtotime($loanDate . ' +3 days'));
         $data = [
-            'borrow_id' => $borrowId,
             'user_id' => $decoded->user_id,
             'book_id' => $currentBook['book_id'],
             'loan_date' => $loanDate,
             'due_date' => $dueDate,
             'status' => 'process_return',
-            'updated_at' => date('Y/m/d'),
+            'deleted_at' => null,
         ];
 
-        $this->borrowModel->replace($data);
+        $this->borrowModel->update($borrowId, $data);
+
+        $dataBook = [
+            "stock" => (int)$remainingStock + 1,
+        ];
+
+        $this->bookModel->update($bookId, $dataBook);
+    
         $response = [
             "status" => 200,
             'message' => 'Return Book Succesfully!',

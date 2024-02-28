@@ -3,6 +3,7 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use CodeIgniter\Database\RawSql;
 
 class Books extends Migration
 {
@@ -53,6 +54,23 @@ class Books extends Migration
             'thumbnail' => [
                 'type' => 'VARCHAR',
                 'constraint' => 100,
+                'null' => true,
+            ],
+            'stock' => [
+                'type' => 'INT',
+                'contraint' => true,
+            ],
+            'created_at' => [
+                'type'    => 'TIMESTAMP',
+                'default' => new RawSql('CURRENT_TIMESTAMP'),
+            ],
+            'updated_at' => [
+                'type'    => 'TIMESTAMP',
+                'default' => new RawSql('CURRENT_TIMESTAMP'),
+            ],
+            'deleted_at' => [
+                'type'    => 'TIMESTAMP',
+                'default' => new RawSql('CURRENT_TIMESTAMP'),
                 'null' => true,
             ],
         ]);

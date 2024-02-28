@@ -15,6 +15,7 @@ class UserSeeder extends Seeder
                 'password'  =>  password_hash("admin", PASSWORD_DEFAULT),
                 'address' => 'Jaksel',
                 'role'  => 'admin',
+                'deleted_at' => null,
             ],
             [
                 'user_name'  => 'Petugas',
@@ -22,6 +23,15 @@ class UserSeeder extends Seeder
                 'password'  =>  password_hash("petugas", PASSWORD_DEFAULT),
                 'address' => 'Malang',
                 'role'  => 'petugas',
+                'deleted_at' => null,
+            ],
+            [
+                'user_name'  => 'warda',
+                'email'  =>  "warda@gmail.com",
+                'password'  =>  password_hash("123456", PASSWORD_DEFAULT),
+                'address' => 'Malang',
+                'role'  => 'user',
+                'deleted_at' => null,
             ],
         ];
         $this->db->table('users')->insertBatch($data);

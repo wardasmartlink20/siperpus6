@@ -148,7 +148,7 @@
             </div>
             <div class="modal-body">
               <div class="px-4">
-                <form enctype="multipart/form-data" action="<?php echo base_url(); ?>/books/update/<?= $d['book_id'] ?>" method="put">
+                <form enctype="multipart/form-data" action="<?php echo base_url(); ?>/books/update/<?= $d['book_id'] ?>" method="post">
                   <div class="form-group">
                     <label for="title" class="form-label">Title</label>
                     <input required name="title" type="text" class="form-control form-control-user" id="title" aria-describedby="title" value="<?= $d['title'] ?>">

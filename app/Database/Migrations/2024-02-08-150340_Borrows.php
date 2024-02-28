@@ -3,6 +3,7 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use CodeIgniter\Database\RawSql;
 
 class Borrows extends Migration
 {
@@ -31,6 +32,11 @@ class Borrows extends Migration
                 'constraint' => 10,
                 'unsigned' => true,
             ],
+            'confirm_by' => [
+                'type' => 'VARCHAR',
+                'constraint' => 50,
+                'null' => true,
+            ],
             'loan_date' => [
                 'type' => 'DATETIME',
                 'null' => true,
@@ -44,8 +50,17 @@ class Borrows extends Migration
                 'constraint' => 50,
                 'null' => true,
             ],
+            'created_at' => [
+                'type'    => 'TIMESTAMP',
+                'default' => new RawSql('CURRENT_TIMESTAMP'),
+            ],
             'updated_at' => [
-                'type' => 'DATETIME',
+                'type'    => 'TIMESTAMP',
+                'default' => new RawSql('CURRENT_TIMESTAMP'),
+            ],
+            'deleted_at' => [
+                'type'    => 'TIMESTAMP',
+                'default' => new RawSql('CURRENT_TIMESTAMP'),
                 'null' => true,
             ],
         ]);

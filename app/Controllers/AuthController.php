@@ -204,6 +204,36 @@ class AuthController extends BaseController
         return $this->respond($response, 200);
     }
 
+    public function updateProfileApi()
+    {
+        $decoded = $this->decodedToken();
+        $email = $this->request->getVar("email");
+        $modelProfile = new UserModel();
+        $isExistEmail = $modelProfile
+            ->where("email", $email)
+            ->first();
+            
+        $data = [
+            "email" => $this->request->getVar("email")
+        ];
+
+        $response[] = [];
+        if (!$isExistEmail) {
+            $modelProfile->update($decoded->user_id, $data);
+            $response = [
+                "status" => 200,
+                "message" => "Update profile successfully.",
+            ];
+            return $this->respond($response, 200);
+        } else {
+            $response = [
+                "status" => 400,
+                "message" => "Email is exist!",
+            ];
+            return $this->respond($response, 400);
+        }
+    }
+
     function logout()
     {
         $session = session();

@@ -52,6 +52,7 @@ $routes->group("", ['filter' => 'cors'], function ($routes) {
   $routes->get('/api/books/(:num)', 'BookController::detailBookApi/$1', ['filter' => 'authFilter']);
   $routes->get('/api/category', 'CategoryController::categoryApi', ['filter' => 'authFilter']);
   $routes->get('/api/profile', 'AuthController::profileAPi', ['filter' => 'authFilter']);
+  $routes->post('/api/profile/update', 'AuthController::updateProfileApi', ['filter' => 'authFilter']);
   $routes->get('/api/total-fine', 'BorrowingController::getTotalFineApi', ['filter' => 'authFilter']);
   $routes->get('/api/borrowing', 'BorrowingController::listBorrowingApi', ['filter' => 'authFilter']);
   $routes->post('/api/borrowing', 'BorrowingController::postBorrowingBook', ['filter' => 'authFilter']);
@@ -64,7 +65,7 @@ $routes->group('', ['filter' => 'authGuard'], function ($routes) {
   // BOOKS
   $routes->get('/books', 'BookController::booksView');
   $routes->post('/books/create', 'BookController::create');
-  $routes->post('/books/update/(:num)', 'BookController::update/$1');
+  $routes->post('/books/update/(:num)', 'BookController::updateView/$1');
   $routes->post('/books/delete/(:num)', 'BookController::delete/$1');
 
   // PAYMENTS

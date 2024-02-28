@@ -16,6 +16,7 @@ class BorrowingSeeder extends Seeder
                 'due_date'  =>  "2024-02-07 00:00:00",
                 'status' => 'process_borrowing',
                 'updated_at'  => '2024-02-07 00:00:00',
+                'deleted_at' => null,
             ],
             [
                 'user_id' => 2,
@@ -24,6 +25,7 @@ class BorrowingSeeder extends Seeder
                 'due_date'  =>  "2024-02-07 00:00:00",
                 'status' => 'borrowed',
                 'updated_at'  => '2024-02-07 00:00:00',
+                'deleted_at' => null,
             ],
         ];
         $this->db->table('borrows')->insertBatch($data);

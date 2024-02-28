@@ -10,14 +10,14 @@ class BorrowModel extends Model
     protected $primaryKey       = 'borrow_id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
+    protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['user_id', 'book_id', 'loan_date', 'due_date', 'status', 'updated_at'];
+    protected $allowedFields    = ['user_id', 'book_id', 'confirm_by', 'loan_date', 'due_date', 'status', 'updated_at', 'created_at', 'updated_at', 'deleted_at'];
 
     protected bool $allowEmptyInserts = false;
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';

@@ -250,12 +250,10 @@ class BookController extends BaseController
         return redirect()->to(base_url("/books"));
     }
 
-    public function update($id)
+    public function updateView($id)
     {
         helper(['form']);
         $thumbnail = $this->request->getFile('thumbnail');
-        $fileName = $thumbnail->getRandomName();
-        $thumbnail->move('assets/books', $fileName);
 
         $data = [
             'book_id' => $id,
@@ -264,10 +262,15 @@ class BookController extends BaseController
             'publisher' => $this->request->getVar('publisher'),
             'year_publication' => $this->request->getVar('year_publication'),
             'synopsis' => $this->request->getVar('synopsis'),
-            'thumbnail' => '/assets/books/' . $fileName,
         ];
 
-        $this->bookModel->replace($data);
+        if ($thumbnail != "") {
+            $fileName = $thumbnail->getRandomName();
+            $thumbnail->move('assets/books', $fileName);
+            $data["thumbnail"] = '/assets/books/' . $fileName;
+        }
+
+        $this->bookModel->update($id, $data);
         session()->setFlashdata('success', 'Update Book Successfully.');
         return redirect()->to(base_url("/books"));
     }
