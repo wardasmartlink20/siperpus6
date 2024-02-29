@@ -3,7 +3,7 @@
 - composer install
 - php spark migrate
 - php spark db:seed dataseeder
-- php spark serv
+- php spark serve
 
 ## Server Requirements
 
