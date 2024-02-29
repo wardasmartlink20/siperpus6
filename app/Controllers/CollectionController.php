@@ -19,7 +19,10 @@ class CollectionController extends BaseController
 
     public function index()
     {
+        $decoded = $this->decodedToken();
+        $userId = $decoded->user_id;
         $data = $this->collectionModel
+            ->where("collections.user_id", $userId)
             ->join("users", "users.user_id = collections.user_id")
             ->join("books", "books.book_id = collections.book_id")
             ->findAll();
