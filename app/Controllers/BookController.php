@@ -109,6 +109,7 @@ class BookController extends BaseController
             $averageRating = count($reviews) > 0 ? $totalRating / count($reviews) : 0;
 
             $responseData[] = array_merge($book, [
+                'collection_id' => $collection ? (int)$collection["collection_id"] : null,
                 'is_save' => $statusCollection,
                 'rating' => round($averageRating, 1),
                 'reviews' => $responseReview
@@ -175,6 +176,7 @@ class BookController extends BaseController
             'rating' => round($averageRating, 1),
             'reviews' => $responseReview,
             'is_status' => $isStatus,
+            'collection_id' => $collection ? (int)$collection["collection_id"] : null,
             'is_save' => $statusCollection,
         ]);
 
@@ -233,6 +235,7 @@ class BookController extends BaseController
                 'rating' => round($averageRating, 1),
                 'reviews' => $responseReview,
                 'is_save' => $statusCollection,
+                'collection_id' => $collection ? (int)$collection["collection_id"] : null,
             ]);
         }
 
