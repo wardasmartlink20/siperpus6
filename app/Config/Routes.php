@@ -58,6 +58,9 @@ $routes->group("", ['filter' => 'cors'], function ($routes) {
   $routes->post('/api/borrowing', 'BorrowingController::postBorrowingBook', ['filter' => 'authFilter']);
   $routes->post('/api/return', 'BorrowingController::postReturnBook', ['filter' => 'authFilter']);
   $routes->post('/api/review', 'ReviewController::submitReviewApi', ['filter' => 'authFilter']);
+  $routes->get('/api/collections', 'CollectionController::index', ['filter' => 'authFilter']);
+  $routes->post('/api/collections', 'CollectionController::createCollection', ['filter' => 'authFilter']);
+  $routes->delete('/api/collections/delete/(:num)', 'CollectionController::deleteCollection/$1', ['filter' => 'authFilter']);
 });
 
 // MVC
