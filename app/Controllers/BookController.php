@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\BookModel;
 use App\Models\BorrowModel;
 use App\Models\CategoryModel;
+use App\Models\CollectionModel;
 use App\Models\ReviewModel;
 use CodeIgniter\API\ResponseTrait;
 
@@ -13,13 +14,14 @@ class BookController extends BaseController
 {
     use ResponseTrait;
 
-    protected $bookModel, $categoryModel, $reviewModel, $borrowModel, $books;
+    protected $bookModel, $categoryModel, $reviewModel, $borrowModel, $collectionModel, $books;
     public function __construct()
     {
         $this->bookModel = new BookModel();
         $this->categoryModel = new CategoryModel();
         $this->reviewModel = new ReviewModel();
         $this->borrowModel = new BorrowModel();
+        $this->collectionModel = new CollectionModel();
         $this->books = $this->bookModel
             ->join('categories', 'categories.category_id = books.category_id')
             ->findAll();
@@ -54,6 +56,9 @@ class BookController extends BaseController
 
     public function listBooksApi()
     {
+        $decoded = $this->decodedToken();
+        $userId = $decoded->user_id;
+
         // Get the category ID from the request
         $categoryId = $this->request->getVar('category');
 
@@ -78,6 +83,12 @@ class BookController extends BaseController
         // Loop through each book
         foreach ($books as $book) {
             // Fetch reviews for the current book
+            $collection = $this->collectionModel
+                ->where("user_id", $userId)
+                ->where("book_id", $book["book_id"])
+                ->first();
+            $statusCollection = boolval($collection);
+
             $reviews = $this->reviewModel
                 ->join('users', 'users.user_id = reviews.user_id')
                 ->where(['book_id' => $book['book_id']])
@@ -98,6 +109,7 @@ class BookController extends BaseController
             $averageRating = count($reviews) > 0 ? $totalRating / count($reviews) : 0;
 
             $responseData[] = array_merge($book, [
+                'is_save' => $statusCollection,
                 'rating' => round($averageRating, 1),
                 'reviews' => $responseReview
             ]);
@@ -116,6 +128,8 @@ class BookController extends BaseController
     public function detailBookApi($id)
     {
         $decoded = $this->decodedToken();
+        $userId = $decoded->user_id;
+
         $book = $this->bookModel
             ->join('categories', 'categories.category_id = books.category_id')
             ->where(['books.book_id' => $id])
@@ -128,6 +142,12 @@ class BookController extends BaseController
             ->first();
 
         $isStatus = $status ? ($status["status"] ? true : false) : false;
+
+        $collection = $this->collectionModel
+            ->where("user_id", $userId)
+            ->where("book_id", $id)
+            ->first();
+        $statusCollection = boolval($collection);
 
         // Initialize an empty array for the final response
         $responseData = [];
@@ -155,6 +175,7 @@ class BookController extends BaseController
             'rating' => round($averageRating, 1),
             'reviews' => $responseReview,
             'is_status' => $isStatus,
+            'is_save' => $statusCollection,
         ]);
 
         // Prepare the final response
@@ -169,6 +190,9 @@ class BookController extends BaseController
 
     public function getPopularBooks()
     {
+        $decoded = $this->decodedToken();
+        $userId = $decoded->user_id;
+
         $builder = $this->borrowModel;
         $builder->select('books.*, COUNT(borrows.book_id) as borrow_count');
         $builder->join('books', 'books.book_id = borrows.book_id');
@@ -179,6 +203,12 @@ class BookController extends BaseController
         $responseData = [];
         // Loop through each book
         foreach ($popularBooks as $book) {
+            $collection = $this->collectionModel
+                ->where("user_id", $userId)
+                ->where("book_id", $book["book_id"])
+                ->first();
+            $statusCollection = boolval($collection);
+
             // Fetch reviews for the current book
             $reviews = $this->reviewModel
                 ->join('users', 'users.user_id = reviews.user_id')
@@ -201,7 +231,8 @@ class BookController extends BaseController
 
             $responseData[] = array_merge($book, [
                 'rating' => round($averageRating, 1),
-                'reviews' => $responseReview
+                'reviews' => $responseReview,
+                'is_save' => $statusCollection,
             ]);
         }
 
