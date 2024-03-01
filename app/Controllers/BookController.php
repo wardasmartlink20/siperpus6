@@ -196,6 +196,7 @@ class BookController extends BaseController
         $userId = $decoded->user_id;
 
         $builder = $this->borrowModel;
+        $builder->where("books.deleted_at = ", null);
         $builder->select('books.*, COUNT(borrows.book_id) as borrow_count');
         $builder->join('books', 'books.book_id = borrows.book_id');
         $builder->groupBy('borrows.book_id');
