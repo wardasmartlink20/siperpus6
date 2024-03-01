@@ -325,20 +325,20 @@ class BorrowingController extends BaseController
                 'status' => 'process_borrowing',
                 'deleted_at' => null,
             ];
-    
+
             $this->borrowModel->save($data);
-    
+
             $dataBook = [
                 "stock" => (int)$remainingStock - 1,
             ];
-    
+
             $this->bookModel->update($bookId, $dataBook);
-    
+
             $response = [
                 "status" => 200,
                 'message' => 'Borrowing Book Succesfully!',
             ];
-    
+
             return $this->respond($response, 200);
         } else {
 
@@ -346,7 +346,7 @@ class BorrowingController extends BaseController
                 "status" => 400,
                 'message' => 'Book stock is out of stock!',
             ];
-    
+
             return $this->respond($response, 400);
         }
     }
@@ -378,7 +378,7 @@ class BorrowingController extends BaseController
         ];
 
         $this->bookModel->update($bookId, $dataBook);
-    
+
         $response = [
             "status" => 200,
             'message' => 'Return Book Succesfully!',
@@ -386,7 +386,6 @@ class BorrowingController extends BaseController
 
         return $this->respond($response, 200);
     }
-
 
     public function getTotalFineApi()
     {
@@ -402,7 +401,7 @@ class BorrowingController extends BaseController
         $currentDate = new DateTime();
         $daysDifference = $dueDate->diff($currentDate)->days;
 
-        if ($dueDate < $currentDate) {
+        if ($dueDate > $currentDate) {
             $totalFine = 0;
         } else {
             $totalFine = $daysDifference * 1000;
