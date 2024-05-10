@@ -31,7 +31,7 @@
       <!-- begin::Table container -->
       <div class="table-responsive">
         <!-- begin::Table -->
-        <table class="table table-bordered table-row-dashed table-row-gray-300 align-middle gs-0 gy-4" id="tabledtbuku">
+        <table class="table table-row-gray-300 align-middle gs-0 gy-4" id="tabledtbuku">
           <!-- begin::Table head -->
           <thead style="background-color: #A9AF7E; color: black">
             <tr class="fw-bold">
@@ -120,7 +120,7 @@
                 </div>
                 <div class="form-group">
                   <label for="synopsis" class="form-label">Synopsis</label>
-                  <textarea required name="synopsis" class="form-control" id="synopsis-create" rows="3" aria-describedby="synopsis"></textarea>
+                  <textarea required name="synopsis" class="form-control" id="synopsis" rows="3" aria-describedby="synopsis"></textarea>
                 </div>
                 <div class="form-group">
                   <label for="synopsis" class="form-label">Stock</label>
@@ -173,7 +173,7 @@
                   </div>
                   <div class="form-group">
                     <label for="synopsis" class="form-label">Synopsis</label>
-                    <textarea required name="synopsis" class="form-control" id="synopsis-edit" rows="3" aria-describedby="synopsis"><?= $d['synopsis'] ?></textarea>
+                    <textarea required name="synopsis" class="form-control" id="synopsis" rows="3" aria-describedby="synopsis"><?= $d['synopsis'] ?></textarea>
                   </div>
                   <div class="form-group">
                     <label for="stock" class="form-label">Stock</label>
@@ -224,9 +224,6 @@
 
 <?= $this->section('scripts') ?>
 <script type="text/javascript">
-  ClassicEditor.create(document.querySelector('#synopsis-create'))
-  ClassicEditor.create(document.querySelector('#synopsis-edit'))
-
   var currentURL = window.location.search;
   var urlParams = new URLSearchParams(currentURL);
   var pageParam = urlParams.get('page');

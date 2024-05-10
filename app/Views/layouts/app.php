@@ -19,13 +19,6 @@
 
     <!-- Custom scripts for all pages-->
     <script src="<?= base_url('assets/'); ?>js/sb-admin-2.min.js"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/41.3.1/classic/ckeditor.js"></script>\
-    <style>
-        .ck-editor__editable_inline {
-            min-height: 200px;
-            color: #000000;
-        }
-    </style>
 </head>
 
 <body id="page-top">
