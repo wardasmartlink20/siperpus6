@@ -56,35 +56,24 @@ class BookController extends BaseController
 
     public function listBooksApi()
     {
-        $decoded = $this->decodedToken();
-        $userId = $decoded->user_id;
-
-        // Get the category ID from the request
         $categoryId = $this->request->getVar('category');
+        $search = $this->request->getVar('search');
 
-        // Initialize an empty array for books
         $books = [];
 
-        // Check if a category ID is provided
-        if ($categoryId) {
-            // If a category ID is provided, fetch books with a matching category
+        if ($categoryId !== null || $search !== null) {
             $books = $this->bookModel
                 ->join('categories', 'categories.category_id = books.category_id')
-                ->where(['books.category_id' => $categoryId])
+                ->where('books.category_id', $categoryId)
+                ->where('books.title LIKE', "%$search%")
                 ->findAll();
         } else {
-            // If no category ID is provided, fetch all books
             $books = $this->bookModel->findAll();
         }
 
-        // Initialize an empty array for the final response
         $responseData = [];
-
-        // Loop through each book
         foreach ($books as $book) {
-            // Fetch reviews for the current book
             $collection = $this->collectionModel
-                ->where("user_id", $userId)
                 ->where("book_id", $book["book_id"])
                 ->first();
             $statusCollection = boolval($collection);
@@ -116,20 +105,18 @@ class BookController extends BaseController
             ]);
         }
 
-        // Prepare the final response
         $response = [
             "status" => 200,
             "data" => $responseData,
         ];
 
-        // Return the response
         return $this->respond($response, 200);
     }
 
     public function detailBookApi($id)
     {
-        $decoded = $this->decodedToken();
-        $userId = $decoded->user_id;
+        // $decoded = $this->decodedToken();
+        // $userId = $decoded->user_id;
 
         $book = $this->bookModel
             ->join('categories', 'categories.category_id = books.category_id')
@@ -138,14 +125,14 @@ class BookController extends BaseController
 
         $status = $this->borrowModel
             ->select('status')
-            ->where(['borrows.user_id' => $decoded->user_id])
+            // ->where(['borrows.user_id' => $decoded->user_id])
             ->where(['borrows.book_id' => $id])
             ->first();
 
         $isStatus = $status ? ($status["status"] ? true : false) : false;
 
         $collection = $this->collectionModel
-            ->where("user_id", $userId)
+            // ->where("user_id", $userId)
             ->where("book_id", $id)
             ->first();
         $statusCollection = boolval($collection);

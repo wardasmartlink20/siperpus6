@@ -311,7 +311,7 @@ class BorrowingController extends BaseController
         $decoded = $this->decodedToken();
         $bookId = $this->request->getVar('book_id');
         $loanDate = date('Y/m/d');
-        $dueDate = date('Y/m/d', strtotime($loanDate . ' +3 days'));
+        $dueDate = date('Y/m/d', strtotime($loanDate . ' +1 month'));
 
         $currentBook = $this->bookModel->where("book_id", $bookId)->first();
         $remainingStock = $currentBook["stock"];

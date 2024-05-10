@@ -86,7 +86,7 @@ class CollectionController extends BaseController
 
         $response = [
             'status' => 200,
-            'data' => "Save favorite book successfully!",
+            'message' => "Save favorite book successfully!",
         ];
 
         return $this->respond($response, 200);

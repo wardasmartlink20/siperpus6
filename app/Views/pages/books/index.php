@@ -120,12 +120,12 @@
                 </div>
                 <div class="form-group">
                   <label for="synopsis" class="form-label">Synopsis</label>
-                  <textarea required name="synopsis" class="form-control" id="synopsis" rows="3" aria-describedby="synopsis"></textarea>
+                  <textarea required name="synopsis" class="form-control" id="synopsis-create" rows="3" aria-describedby="synopsis"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="synopsis" class="form-label">Stock</label>
-                    <input required name="stock" type="number" class="form-control form-control-user" id="stock" aria-describedby="stock">
-                  </div>
+                  <label for="synopsis" class="form-label">Stock</label>
+                  <input required name="stock" type="number" class="form-control form-control-user" id="stock" aria-describedby="stock">
+                </div>
                 <div class="form-group">
                   <label for="thumbnail" class="form-label">Add Photo</label>
                   <input required name="thumbnail" type="file" class="form-control form-control-user" id="thumbnail" aria-describedby="thumbnail">
@@ -173,10 +173,10 @@
                   </div>
                   <div class="form-group">
                     <label for="synopsis" class="form-label">Synopsis</label>
-                    <input required name="synopsis" type="text" class="form-control form-control-user" id="synopsis" aria-describedby="synopsis" value="<?= $d['synopsis'] ?>">
+                    <textarea required name="synopsis" class="form-control" id="synopsis-edit" rows="3" aria-describedby="synopsis"><?= $d['synopsis'] ?></textarea>
                   </div>
                   <div class="form-group">
-                    <label for="synopsis" class="form-label">Stock</label>
+                    <label for="stock" class="form-label">Stock</label>
                     <input required name="stock" type="number" class="form-control form-control-user" id="stock" aria-describedby="stock" value="<?= $d['stock'] ?>">
                   </div>
                   <div class="form-group">
@@ -224,6 +224,9 @@
 
 <?= $this->section('scripts') ?>
 <script type="text/javascript">
+  ClassicEditor.create(document.querySelector('#synopsis-create'))
+  ClassicEditor.create(document.querySelector('#synopsis-edit'))
+
   var currentURL = window.location.search;
   var urlParams = new URLSearchParams(currentURL);
   var pageParam = urlParams.get('page');

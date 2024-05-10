@@ -5,7 +5,6 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\ReviewModel;
 use CodeIgniter\API\ResponseTrait;
-use CodeIgniter\HTTP\ResponseInterface;
 
 class ReviewController extends BaseController
 {
@@ -15,6 +14,17 @@ class ReviewController extends BaseController
     public function __construct()
     {
         $this->reviewModel = new ReviewModel();
+    }
+
+    public function listReviewApi()
+    {
+        $responseData = $this->reviewModel->findAll();
+        $response = [
+            "status" => 200,
+            "data" => $responseData,
+        ];
+
+        return $this->respond($response, 200);
     }
 
     public function submitReviewApi()
